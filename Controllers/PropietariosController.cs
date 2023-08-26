@@ -55,7 +55,8 @@ namespace AppInmobiliaria.Controllers
         public ActionResult Edit(int id)
         {
             var res = repo.ObtenerUno(id);
-            return View();
+
+            return View(res);
         }
 
         // POST: Propietarios/Edit/5

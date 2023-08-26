@@ -7,7 +7,7 @@
 <h1>Lista de Clientes</h1>
 
 <p>
-    <a asp-action="Create">Agregar</a>
+    <a asp-action="Create" class="btn btn-success">Agregar</a>
 </p>
 <table class="table">
     <thead>
@@ -68,9 +68,9 @@
                     @Html.DisplayFor(modelItem => item.FechaNacimiento)
                 </td>
                 <td>
-                    @Html.ActionLink("Editar", "Edit", new { id=item.Id}) |
-                    @Html.ActionLink("Detalle", "Details", new { id=item.Id }) |
-                    @Html.ActionLink("Eliminar", "Delete", new { id=item.Id })
+                    @Html.ActionLink("Editar", "Edit", new { id=item.Id},new{@class="btn btn-warning"})
+                    @Html.ActionLink("Detalle", "Details", new { id=item.Id,}, new{@class="btn btn-dark"})
+                    @Html.ActionLink("Eliminar", "Delete", new { id=item.Id}, new{@class="btn btn-danger"})
                 </td>
 
             </tr>

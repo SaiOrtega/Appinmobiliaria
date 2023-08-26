@@ -81,7 +81,8 @@ namespace AppInmobiliaria.Controllers
         // GET: Inquilinos/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var res = repo.ObtenerUno(id);
+            return View(res);
         }
 
         // POST: Inquilinos/Delete/5

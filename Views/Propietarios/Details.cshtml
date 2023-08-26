@@ -61,6 +61,54 @@
     </dl>
 </div>
 <div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    <a asp-action="Index">Regresar</a>
+    @Html.ActionLink("Editar", "Edit", new { id = Model.Id},new {@class = "btn btn-primary"})
+    @* @Html.ActionLink("Eliminar","Delete", new{id=Model.Id})| *@
+    @Html.ActionLink("Eliminar", "Delete", new { id = Model.Id },new { @class = "btn btn-danger delete-link",onclick =
+    "return confirm('¿Estás seguro de que deseas eliminar este elemento?');"})
+
+    <a asp-action="Index" class="btn btn-secondary">Regresar</a>
 </div>
+
+
+<!-- Modal de confirmación -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Estás a punto de eliminar el siguiente elemento:
+                <p>Id: @Model.Id</p>
+                <p>Nombre: @Model.Nombre</p>
+                ¿Estás seguro de que deseas continuar?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteButton">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(".delete-link").on("click", function () {
+            var id = $(this).data("id"); // Obtén el ID del elemento a eliminar
+            $("#confirmDeleteButton").attr("data-id", id); // Almacena el ID en el botón de confirmación
+        });
+
+        $("#confirmDeleteButton").on("click", function () {
+            var id = $(this).data("id"); // Obtén el ID almacenado en el botón
+            // Realiza la eliminación utilizando AJAX u otra lógica
+            // Después de la eliminación, puedes redirigir o realizar otras acciones
+        });
+    });
+</script>
+
+
+

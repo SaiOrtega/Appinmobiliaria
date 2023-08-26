@@ -61,8 +61,17 @@
         </dd>
     </dl>
 
-    <form asp-action="Delete">
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Regresar</a>
+    <form asp-action="Delete" id="deleteForm">
+        <input type="submit" value="Delete" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Regresar</a>
     </form>
 </div>
+<script>
+    document.getElementById('deleteForm').addEventListener('submit', function (event) {
+        event.preventDefault(); // Evita que el formulario se envíe automáticamente
+
+        if (confirm('¿Estás seguro de que deseas eliminar este elemento?')) {
+            this.submit(); // Envía el formulario si el usuario confirma
+        }
+    });
+</script>
