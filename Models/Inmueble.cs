@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.Build.Framework;
 
 namespace AppInmobiliaria.Models;
 
@@ -9,34 +10,35 @@ public class Inmueble
 {
 
     [Display(Name = "N°")]
-    public int? Id { get; set; }
+    public int Id { get; set; }
+
 
     [Display(Name = "Dirección")]
-    public string? Direccion { get; set; }
-    public int? Uso { get; set; }
-    public int? Tipo { get; set; }
+
+    public string direccion { get; set; }
+
+    public string uso { get; set; }
+    public string tipo { get; set; }
 
     [Display(Name = "Cant.Ambientes")]
-    public int? CantidadDeAmbientes { get; set; }
-    // como seria lat y long
-    public decimal? Latitud { get; set; }
-    public decimal? Longitud { get; set; }
-    public decimal? Precio { get; set; }
-    public decimal? Superficie { get; set; }
-    public bool? Activo { get; set; }
+    public int ambientes { get; set; }
+    public decimal latitud { get; set; }
+    public decimal longitud { get; set; }
+    public decimal precio { get; set; }
+    public decimal superficie { get; set; }
+    public string estado { get; set; }
 
     [Display(Name = "Propietario")]//nuestra en las vista el dato
 
-    public int? PropietarioId { get; set; }
+    public int propietarioId { get; set; }
 
-    [ForeignKey(nameof(PropietarioId))]
-    public Propietario? Duenio { get; set; }// Propietario
+    [ForeignKey(nameof(propietarioId))]
+    public Propietario? duenio { get; set; }// Propietario
 
     public Inmueble() { }
 
     public override string ToString()
     {
-        return $"{Direccion}";
+        return $"{direccion}";
     }
 }
-
