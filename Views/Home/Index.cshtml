@@ -13,7 +13,10 @@
                 <div class="card-body">
                     <h5 class="card-title">Inquilinos</h5>
                     <p class="card-text">Acceso al Listado</p>
-                    <a class="btn btn-primary" asp-controller="Inquilinos">Acceder</a>
+                    @if (User.Identity.IsAuthenticated)//falta inplementarlo en las otras card
+                    {
+                        <a class="btn btn-primary" asp-controller="Inquilinos">Acceder</a>
+                    }
                 </div>
             </div>
         </div>
@@ -24,7 +27,11 @@
                 <div class="card-body">
                     <h5 class="card-title">Propietarios</h5>
                     <p class="card-text">Acceso al Listado</p>
-                    <a class="btn btn-primary" asp-controller="Propietarios">Acceder</a>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a class="btn btn-primary" asp-controller="Propietarios">Acceder</a>
+                    }
+
                 </div>
             </div>
         </div>
@@ -35,7 +42,10 @@
                 <div class="card-body">
                     <h5 class="card-title">Inmuebles</h5>
                     <p class="card-text">Acceso al Listado</p>
-                    <a class="btn btn-primary" asp-controller="Inmuebles">Acceder</a>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a class="btn btn-primary" asp-controller="Inmuebles">Acceder</a>
+                    }
                 </div>
             </div>
         </div>
@@ -51,5 +61,3 @@
             </div>
         </div>
     </div>
-
-

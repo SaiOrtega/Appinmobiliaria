@@ -6,7 +6,7 @@ namespace AppInmobiliaria.Models;
 public class RepoInquilinos
 {
     String connectionString = "Server=localhost;Database=imOrtega;User=root;Password=;SslMode=none";
-
+    //cambiar base de datos
     public RepoInquilinos()
     {
 
@@ -73,7 +73,7 @@ public class RepoInquilinos
 
     }
 
-    public Inquilino ObtenerUno(int id)
+    public Inquilino? ObtenerUno(int id)
     {
         Inquilino p = new Inquilino();
         using (MySqlConnection conn = new MySqlConnection(connectionString))

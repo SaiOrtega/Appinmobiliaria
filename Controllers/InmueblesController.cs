@@ -5,17 +5,23 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using AppInmobiliaria.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AppInmobiliaria.Controllers
 {
+    // [Authorize]
     public class InmueblesController : Controller
     {
-        RepoInmuebles repo = new RepoInmuebles();
+        public readonly RepoInmuebles repo = new RepoInmuebles();
 
         // GET: Inmuebles
         public ActionResult Index()
         {
             var inmueble = repo.ObtenerTodos();
+            RepoTipos repoTipo = new RepoTipos();
+            RepoUsos repoUso = new RepoUsos();
+            ViewBag.tipo = repoTipo.ObtenerTodos();
+            ViewBag.uso = repoUso.ObtenerTodos();
             return View(inmueble);
         }
 
@@ -25,6 +31,11 @@ namespace AppInmobiliaria.Controllers
             var inmueble = repo.ObtenerUno(id);
             RepoPropietarios repoProp = new RepoPropietarios();
             ViewBag.propietario = repoProp.ObtenerUno(id);
+            ViewBag.pTodos = repoProp.ObtenerTodos();
+            RepoUsos repoUso = new RepoUsos();
+            ViewBag.uso = repoUso.ObtenerTodos();
+            RepoTipos repoTipo = new RepoTipos();
+            ViewBag.tipo = repoTipo.ObtenerTodos();
 
             return View(inmueble);
         }
@@ -34,6 +45,12 @@ namespace AppInmobiliaria.Controllers
         {
             RepoPropietarios repoProp = new RepoPropietarios();
             ViewBag.propietario = repoProp.ObtenerTodos();
+
+            RepoUsos repoUso = new RepoUsos();
+            ViewBag.uso = repoUso.ObtenerTodos();
+
+            RepoTipos repoTipo = new RepoTipos();
+            ViewBag.tipo = repoTipo.ObtenerTodos();
             return View();
         }
 
@@ -53,6 +70,12 @@ namespace AppInmobiliaria.Controllers
             {
                 RepoPropietarios repoProp = new RepoPropietarios();
                 ViewBag.propietario = repoProp.ObtenerTodos();
+
+                RepoUsos repoUso = new RepoUsos();
+                ViewBag.uso = repoUso.ObtenerTodos();
+
+                RepoTipos repoTipo = new RepoTipos();
+                ViewBag.tipo = repoTipo.ObtenerTodos();
                 return View();
             }
         }
@@ -62,42 +85,51 @@ namespace AppInmobiliaria.Controllers
         {
             var res = repo.ObtenerUno(id);
             RepoPropietarios repoProp = new RepoPropietarios();
+            RepoUsos repoUso = new RepoUsos();
+            RepoTipos repoTipo = new RepoTipos();
+
             ViewBag.propietario = repoProp.ObtenerTodos();
+            ViewBag.uso = repoUso.ObtenerTodos();
+            ViewBag.tipo = repoTipo.ObtenerTodos();
 
             return View(res);
         }
 
         // POST: Inmuebles/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public ActionResult Edit(int id, Inmueble inmueble)
         {
             try
             {
-                var res = repo.Actualizar(inmueble);
-
+                repo.Actualizar(inmueble);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                RepoPropietarios repoProp = new RepoPropietarios();
-                ViewBag.propietario = repoProp.ObtenerTodos();
+                //vuelve al index, los datos hay que vovle a cagarlos?
                 return View();
             }
         }
-
         // GET: Inmuebles/Delete/5
+        //[Authorize(Policy = "Admin")]
         public ActionResult Delete(int id)
         {
             var res = repo.ObtenerUno(id);
             RepoPropietarios repoProp = new RepoPropietarios();
             ViewBag.propietario = repoProp.ObtenerTodos();
+            RepoUsos repoUso = new RepoUsos();
+            ViewBag.uso = repoUso.ObtenerTodos();
+            RepoTipos repoTipo = new RepoTipos();
+            ViewBag.tipo = repoTipo.ObtenerTodos();
+
             return View(res);
         }
 
         // POST: Inmuebles/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Admin")]
         public ActionResult Delete(int id, Inmueble inmueble)
         {
             try

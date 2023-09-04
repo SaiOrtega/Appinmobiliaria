@@ -62,13 +62,10 @@
 </div>
 <div>
     @Html.ActionLink("Editar", "Edit", new { id = Model.Id},new {@class = "btn btn-primary"})
-    @* @Html.ActionLink("Eliminar","Delete", new{id=Model.Id})| *@
     @Html.ActionLink("Eliminar", "Delete", new { id = Model.Id },new { @class = "btn btn-danger delete-link",onclick =
     "return confirm('¿Estás seguro de que deseas eliminar este elemento?');"})
-
     <a asp-action="Index" class="btn btn-secondary">Regresar</a>
 </div>
-
 
 <!-- Modal de confirmación -->
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel"
@@ -98,17 +95,12 @@
 <script>
     $(document).ready(function () {
         $(".delete-link").on("click", function () {
-            var id = $(this).data("id"); // Obtén el ID del elemento a eliminar
-            $("#confirmDeleteButton").attr("data-id", id); // Almacena el ID en el botón de confirmación
+            var id = $(this).data("id");
+            $("#confirmDeleteButton").attr("data-id", id);
         });
 
         $("#confirmDeleteButton").on("click", function () {
-            var id = $(this).data("id"); // Obtén el ID almacenado en el botón
-            // Realiza la eliminación utilizando AJAX u otra lógica
-            // Después de la eliminación, puedes redirigir o realizar otras acciones
+            var id = $(this).data("id");
         });
     });
 </script>
-
-
-

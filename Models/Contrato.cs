@@ -11,13 +11,14 @@ public class Contrato
 
     [DataType(DataType.Date)]
     [Display(Name = "Fecha de Contrato")]
-    public DateTime? FechaContrato { get; set; }
+    public DateTime? FechaInicio { get; set; }
 
     [DataType(DataType.Date)]
+    [FechaActual(ErrorMessage = null)]
     [Display(Name = "Fecha de Vencimiento")]
-    public DateTime? FechaVencimiento { get; set; }
+    public DateTime? FechaFinal { get; set; }
 
-    [Display(Name = "Monto")]
+    [Display(Name = "Monto de Contrato")]
     public decimal? MontoMensual { get; set; }
 
     public Inmueble inmueble { get; set; }
@@ -32,6 +33,30 @@ public class Contrato
     }
 
 
+}
+public class FechaActualAttribute : ValidationAttribute
+{
+    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    {
+        DateTime fechaFinal = Convert.ToDateTime(value);
+        var contrato = (Contrato)validationContext.ObjectInstance;
+
+        if (fechaFinal < DateTime.Now)
+        {
+            return new ValidationResult(ErrorMessage ?? $"La {validationContext.DisplayName} no puede ser anterior a la fecha actual.");
+        }
+
+        if (contrato.FechaInicio.HasValue && fechaFinal < contrato.FechaInicio.Value)
+        {
+            return new ValidationResult(ErrorMessage ?? $"La {validationContext.DisplayName} no puede ser menor que la fecha de inicio.");
+        }
+        if (contrato.FechaFinal.HasValue && contrato.FechaInicio.HasValue)
+        {
+
+        }
+
+        return ValidationResult.Success;
+    }
 }
 
 
