@@ -1,4 +1,5 @@
 using System.Data;
+using Microsoft.AspNetCore.Authorization;
 using MySql.Data.MySqlClient;
 
 namespace AppInmobiliaria.Models;
@@ -141,6 +142,7 @@ public class RepoPagos
 
     }
 
+    [Authorize(Policy = "Administrador")]
     public int Eliminar(int id)
     {
         int res = 0;

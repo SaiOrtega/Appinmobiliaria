@@ -71,11 +71,13 @@
                     @Html.ActionLink("Editar", "Edit", new { id=item.Id},new{@class="btn btn-warning"})
                     @Html.ActionLink("Detalle", "Details", new { id=item.Id,}, new{@class="btn btn-dark"})
                     @if (User.IsInRole("Administrador"))
+                    {
                         @Html.ActionLink("Eliminar", "Delete", new { id=item.Id}, new{@class="btn btn-danger"})
+                    }
 
-                    </td>
+                </td>
 
-                </tr>
+            </tr>
         }
     </tbody>
 </table>

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AppInmobiliaria.Controllers
 {
+    [Authorize]
     public class PropietariosController : Controller
     {
         RepoPropietarios repo = new RepoPropietarios();
@@ -79,6 +80,7 @@ namespace AppInmobiliaria.Controllers
         }
 
         // GET: Propietarios/Delete/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
             var res = repo.ObtenerUno(id);
@@ -88,7 +90,7 @@ namespace AppInmobiliaria.Controllers
         // POST: Propietarios/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = "Admin")]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, Propietario propietario)
         {
             try

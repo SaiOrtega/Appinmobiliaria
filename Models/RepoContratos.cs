@@ -1,4 +1,5 @@
 using System.Data;
+using Microsoft.AspNetCore.Authorization;
 using MySql.Data.MySqlClient;
 
 namespace AppInmobiliaria.Models;
@@ -175,9 +176,11 @@ public class RepoContratos
         return res;
     }
 
+    [Authorize(Policy = "Administrador")]
     public int EliminarContrato(int id)
     {
         int res = 0;
+
         using (MySqlConnection conn = new MySqlConnection(connectionString))
         {
             var sql = @"DELETE FROM contrato WHERE id = @id";

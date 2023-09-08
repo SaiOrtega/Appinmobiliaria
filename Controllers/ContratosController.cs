@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using AppInmobiliaria.Models;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AppInmobiliaria.Controllers
 {
+    [Authorize]
     public class ContratosController : Controller
     {
         public readonly RepoContratos repo = new RepoContratos();
@@ -163,6 +165,7 @@ namespace AppInmobiliaria.Controllers
         }
 
         // GET: Contratos/Delete/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
             return View();
@@ -171,6 +174,7 @@ namespace AppInmobiliaria.Controllers
         // POST: Contratos/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try

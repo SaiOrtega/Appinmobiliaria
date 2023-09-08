@@ -56,7 +56,10 @@
                 <div class="card-body">
                     <h5 class="card-title">Contratos</h5>
                     <p class="card-text">Acceso al Listado</p>
-                    <a class="btn btn-primary" asp-controller="Contratos">Acceder</a>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a class="btn btn-primary" asp-controller="Contratos">Acceder</a>
+                    }
                 </div>
             </div>
         </div>

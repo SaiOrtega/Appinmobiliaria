@@ -25,21 +25,27 @@ public class Usuario
     [Required, EmailAddress]
     public string? Email { get; set; }
     [NotMapped]
-    public IFormFile? FormFile { get; set; }
+    public IFormFile? AvatarFile { get; set; }
 
-    public int rol { get; set; }
+    public int Rol { get; set; }
 
-    public string rolNombre => rol == 1 ? ((eRoles)rol).ToString() : "Empleado";
+    public string RolNombre => Rol > 0 ? ((eRoles)Rol).ToString() : "";
 
 
-    public Usuario() { }
 
-    public static IDictionary<int, string> traerRoles()
+    public static IDictionary<int, string> ObtenerRoles()
     {
-        IDictionary<int, string> roles = new Dictionary<int, string>();
-        roles.Add(1, "Administrador");
-        roles.Add(2, "Empleado");
+        SortedDictionary<int, string> roles = new SortedDictionary<int, string>();
+        Type tipoEnumRol = typeof(eRoles);
+        foreach (var valor in Enum.GetValues(tipoEnumRol))
+        {
+            roles.Add((int)valor, Enum.GetName(tipoEnumRol, valor));
+        }
         return roles;
+    }
+
+    public Usuario()
+    {
     }
 
 

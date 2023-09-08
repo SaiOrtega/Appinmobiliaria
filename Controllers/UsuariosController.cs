@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using AppInmobiliaria.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
@@ -40,28 +40,29 @@ namespace AppInmobiliaria.Controllers
         [Authorize(Policy = "Administrador")]
         public ActionResult Details(int id)
         {
-            var empleado = repoUsuarios.ObtenerUno(id);
-            return View(empleado);
+            var e = repoUsuarios.ObtenerPorId(id);
+            return View(e);
         }
 
-        // GET: Usuarios/Create
+
         [AllowAnonymous]
+        //[Authorize(Policy = "Administrador")]
         public ActionResult Create()
+
         {
-            ViewBag.rol = Usuario.traerRoles();
+            ViewBag.Roles = Usuario.ObtenerRoles();
             return View();
         }
+
 
         // POST: Usuarios/Create
         [HttpPost]
         //[ValidateAntiForgeryToken]
+        //[Authorize(Policy = "Administrador")]
         public ActionResult Create(Usuario usuario)
         {
             if (!ModelState.IsValid)
-            {
                 return View();
-            }
-
             try
             {
                 string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
@@ -74,7 +75,7 @@ namespace AppInmobiliaria.Controllers
                 //usuario.Rol = User.IsInRole("Administrador") ? usuario.Rol : (int)enRoles.Empleado;
                 var nbreRnd = Guid.NewGuid();//posible nombre aleatorio
                 int res = repoUsuarios.Alta(usuario);
-                if (usuario.Avatar != null && usuario.Id > 0)
+                if (usuario.AvatarFile != null && usuario.Id > 0)
                 {
                     string wwwPath = environment.WebRootPath;
                     string path = Path.Combine(wwwPath, "Uploads");
@@ -83,70 +84,130 @@ namespace AppInmobiliaria.Controllers
                         Directory.CreateDirectory(path);
                     }
                     //Path.GetFileName(usuario.AvatarFile.FileName);//este nombre se puede repetir
-                    string fileName = "avatar_" + usuario.Id + Path.GetExtension(usuario.FormFile.FileName);
+                    string fileName = "avatar_" + usuario.Id + Path.GetExtension(usuario.AvatarFile.FileName);
                     string pathCompleto = Path.Combine(path, fileName);
                     usuario.Avatar = Path.Combine("/Uploads", fileName);
                     // Esta operación guarda la foto en memoria en la ruta que necesitamos
                     using (FileStream stream = new FileStream(pathCompleto, FileMode.Create))
                     {
-                        usuario.FormFile.CopyTo(stream);
+                        usuario.AvatarFile.CopyTo(stream);
                     }
-                    repoUsuarios.Actualizar(usuario);
+                    repoUsuarios.Modificacion(usuario);
                 }
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                ViewBag.Roles = Usuario.traerRoles();
+                ViewBag.Roles = Usuario.ObtenerRoles();
                 return View();
             }
         }
+
+        // GET: Usuarios/Edit/5
         [Authorize]
         public ActionResult Perfil()
         {
             ViewData["Title"] = "Mi perfil";
-            var user = repoUsuarios.ObtenerPorEmail(User.Identity.Name);
-            ViewBag.Roles = Usuario.traerRoles();
-            return View(user);
+            var u = repoUsuarios.ObtenerPorEmail(User.Identity.Name);
+            ViewBag.Roles = Usuario.ObtenerRoles();
+            return View(u);
         }
 
+        [Authorize]
+        [HttpPost]
+        public ActionResult CambiarContrasenia(int idUs, String NContra, String NControl, String UCVieja, String Clave)
+        {
+            var vista = nameof(Edit);
+            TempData["error"] = "a";
+
+            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                                password: UCVieja,
+                                salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
+                                prf: KeyDerivationPrf.HMACSHA1,
+                                iterationCount: 1000,
+                                numBytesRequested: 256 / 8));
+            UCVieja = hashed;
+
+            if (UCVieja == Clave)
+            {
+                if (NContra == NControl)
+                {
+
+                    hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                               password: NContra,
+                               salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
+                               prf: KeyDerivationPrf.HMACSHA1,
+                               iterationCount: 1000,
+                               numBytesRequested: 256 / 8));
+                    NContra = hashed;
+
+                    TempData["error"] = "Contraseña actualizada";
+                    ViewBag.Roles = Usuario.ObtenerRoles();
+                    repoUsuarios.ActualizarContraseña(idUs, NContra);
+                    Usuario u = repoUsuarios.ObtenerPorId(idUs);
+                    return RedirectToAction(vista, new { Id = idUs });
+
+                }
+                else
+                {
+                    TempData["error"] = "Las contraseñas no coinciden";
+                    ViewBag.Roles = Usuario.ObtenerRoles();
+
+                    Usuario u = repoUsuarios.ObtenerPorId(idUs);
+                    return RedirectToAction(vista, new { Id = idUs });
+                }
+
+
+
+            }
+            else
+            {
+                TempData["error"] = "La contraseña actual no es correcta";
+                ViewBag.Roles = Usuario.ObtenerRoles();
+                Usuario u = repoUsuarios.ObtenerPorId(idUs);
+                return RedirectToAction(vista, new { Id = idUs });
+            }
+        }
+
+
         // GET: Usuarios/Edit/5
+        //[Authorize(Policy = "Administrador")]
         public ActionResult Edit(int id)
         {
             ViewData["Title"] = "Editar usuario";
-            var user = repoUsuarios.ObtenerUno(id);
-            ViewBag.Roles = Usuario.traerRoles();
-            return View(user);
+            var u = repoUsuarios.ObtenerPorId(id);
+            ViewBag.Roles = Usuario.ObtenerRoles();
+            return View(u);
         }
+
+
 
         // POST: Usuarios/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public ActionResult Edit(int id, Usuario usuario)
+        public ActionResult Edit(int id, Usuario u)
         {
-            var view = nameof(Edit);
+            var vista = nameof(Edit);//de que vista provengo
             try
             {
-                if (!User.IsInRole("Adminmistrador"))
+                if (!User.IsInRole("Administrador"))//no soy admin
                 {
-                    view = nameof(Perfil);
-                    var user = repoUsuarios.ObtenerPorEmail(User.Identity.Name);
-                    if (user.Id != id)
-                    {
+                    vista = nameof(Perfil);//solo puedo ver mi perfil
+                    var usuarioActual = repoUsuarios.ObtenerPorEmail(User.Identity.Name);
+                    if (usuarioActual.Id != id)//si no es admin, solo puede modificarse él mismo
                         return RedirectToAction(nameof(Index), "Home");
-                    }
-
                 }
-                if (usuario.FormFile != null)
+                // TODO: Add update logic here
+                if (u.AvatarFile != null)
                 {
-                    if (usuario.Avatar != null)
+                    if (u.Avatar != null)
                     {
-                        string avatarPath = Path.Combine(environment.WebRootPath, usuario.Avatar.TrimStart('/'));
+                        string avatarPath = Path.Combine(environment.WebRootPath, u.Avatar.TrimStart('/')); // construir la ruta adecuada agregando wwwRootPath y eliminando el primer slash en u.Avatar
                         System.IO.File.Delete(avatarPath);
                         using (FileStream stream = new FileStream(avatarPath, FileMode.Create))
                         {
-                            usuario.FormFile.CopyTo(stream);
+                            u.AvatarFile.CopyTo(stream);
                         }
 
                     }
@@ -158,23 +219,32 @@ namespace AppInmobiliaria.Controllers
                         {
                             Directory.CreateDirectory(path);
                         }
-                        //Path.GetFileName(usuario.FormFile.FaileName);//este nombre se puede repetir
-                        string fileName = "avatar_" + usuario.Id + Path.GetExtension(usuario.FormFile.FileName);
+                        //Path.GetFileName(usuario.AvatarFile.FileName);//este nombre se puede repetir
+                        string fileName = "avatar_" + u.Id + Path.GetExtension(u.AvatarFile.FileName);
                         string pathCompleto = Path.Combine(path, fileName);
-                        usuario.Avatar = Path.Combine("/Uploads", fileName);
+                        u.Avatar = Path.Combine("/Uploads", fileName);
                         // Esta operación guarda la foto en memoria en la ruta que necesitamos
                         using (FileStream stream = new FileStream(pathCompleto, FileMode.Create))
                         {
-                            usuario.FormFile.CopyTo(stream);
+                            u.AvatarFile.CopyTo(stream);
                         }
-
                     }
+
+
                 }
-                repoUsuarios.Actualizar(usuario);
-                return RedirectToAction(view);
+                /*string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+								password: u.Clave,
+								salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
+								prf: KeyDerivationPrf.HMACSHA1,
+								iterationCount: 1000,
+								numBytesRequested: 256 / 8));
+				u.Clave = hashed;*/
+                repoUsuarios.Modificacion(u);
+
+                return RedirectToAction(vista);
             }
             catch (Exception ex)
-            {
+            {//colocar breakpoints en la siguiente línea por si algo falla
                 throw;
             }
         }
@@ -194,12 +264,10 @@ namespace AppInmobiliaria.Controllers
         {
             try
             {
-                var ruta = Path.Combine(environment.WebRootPath, "Uploads", $"avatar_{usuario.Id}");
-                Path.GetExtension(usuario.Avatar);
+                // TODO: Add delete logic here
+                var ruta = Path.Combine(environment.WebRootPath, "Uploads", $"avatar_{id}" + Path.GetExtension(usuario.Avatar));
                 if (System.IO.File.Exists(ruta))
-                {
                     System.IO.File.Delete(ruta);
-                }
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -207,100 +275,53 @@ namespace AppInmobiliaria.Controllers
                 return View();
             }
         }
-
+        // [Authorize]
         public IActionResult Avatar()
         {
-            var user = repoUsuarios.ObtenerPorEmail(User.Identity.Name);
-
-            string fileName = "avatar_" + user.Id + Path.GetExtension(user.Avatar);
+            var u = repoUsuarios.ObtenerPorEmail(User.Identity.Name);
+            string fileName = "avatar_" + u.Id + Path.GetExtension(u.Avatar);
             string wwwPath = environment.WebRootPath;
             string path = Path.Combine(wwwPath, "Uploads");
             string pathCompleto = Path.Combine(path, fileName);
-            byte[] filebytes = System.IO.File.ReadAllBytes(pathCompleto);
 
-            return File(filebytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
+            //leer el archivo
+            byte[] fileBytes = System.IO.File.ReadAllBytes(pathCompleto);
+            //devolverlo
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
         }
 
-        public string AvarBase64()
+        //[Authorize]
+        public string AvatarBase64()
         {
-            var user = repoUsuarios.ObtenerPorEmail(User.Identity.Name);
-            string fileName = "avatar_" + user.Id + Path.GetExtension(user.Avatar);
+            var u = repoUsuarios.ObtenerPorEmail(User.Identity.Name);
+            string fileName = "avatar_" + u.Id + Path.GetExtension(u.Avatar);
             string wwwPath = environment.WebRootPath;
             string path = Path.Combine(wwwPath, "Uploads");
             string pathCompleto = Path.Combine(path, fileName);
-            byte[] filebytes = System.IO.File.ReadAllBytes(pathCompleto);
-            return Convert.ToBase64String(filebytes);
+
+            //leer el archivo
+            byte[] fileBytes = System.IO.File.ReadAllBytes(pathCompleto);
+            //devolverlo
+            return Convert.ToBase64String(fileBytes);
         }
 
         [AllowAnonymous]
-        public ActionResult LoginEstilo()
+        // GET: Usuarios/Login/
+        public ActionResult LoginModal()
         {
-            return PartialView("_LoginEstilo", new LoginView());
+            return PartialView("_LoginModal", new LoginView());
         }
 
         [AllowAnonymous]
-        public ActionResult Login(String url)
+        // GET: Usuarios/Login/
+
+        public ActionResult Login(string returnUrl)
         {
-            TempData["url"] = url;
+            TempData["returnUrl"] = returnUrl;
             return View();
         }
 
-
-
-
-        [Authorize]
-        [HttpPost]
-        public ActionResult cambiarPassword(int userId, String newPassword, String nControl, String oldPassword, String clave)
-        {
-            var view = nameof(Edit);
-            TempData["error"] = "a";
-
-            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: oldPassword,
-                salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
-                prf: KeyDerivationPrf.HMACSHA1,
-                iterationCount: 1000,
-                numBytesRequested: 256 / 8));
-
-            oldPassword = hashed;
-
-            if (oldPassword == clave)
-            {
-                if (newPassword == nControl)
-                {
-                    hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                        password: newPassword,
-                        salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
-                        prf: KeyDerivationPrf.HMACSHA1,
-                        iterationCount: 1000,
-                        numBytesRequested: 256 / 8));
-                    newPassword = hashed;
-
-                    TempData["error"] = "Contraseña cambiada";
-                    ViewBag.Roles = Usuario.traerRoles();
-                    repoUsuarios.ActualizarContrasenia(userId, newPassword);
-                    Usuario user = repoUsuarios.ObtenerUno(userId);
-                    return RedirectToAction(view, new { id = userId });
-
-                }
-                else
-                {
-                    TempData["error"] = "Las contraseñas no coinciden";
-                    ViewBag.Roles = Usuario.traerRoles();
-                    Usuario user = repoUsuarios.ObtenerUno(userId);
-                    return RedirectToAction(view, new { id = userId });
-                }
-            }
-            else
-            {
-                TempData["error"] = "Contraseña incorrecta";
-                ViewBag.Roles = Usuario.traerRoles();
-                Usuario user = repoUsuarios.ObtenerUno(userId);
-                return RedirectToAction(view, new { id = userId });
-            }
-
-        }
-
+        // POST: Usuarios/Login/
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -330,7 +351,7 @@ namespace AppInmobiliaria.Controllers
                     {
                         new Claim(ClaimTypes.Name, e.Email),
                         new Claim("FullName", e.Nombre + " " + e.Apellido),
-                        new Claim(ClaimTypes.Role, e.rolNombre),
+                        new Claim(ClaimTypes.Role, e.RolNombre),
                     };
 
                     var claimsIdentity = new ClaimsIdentity(
@@ -352,6 +373,7 @@ namespace AppInmobiliaria.Controllers
             }
         }
 
+        // GET: /salir
         [Route("salir", Name = "logout")]
         public async Task<ActionResult> Logout()
         {
@@ -359,6 +381,7 @@ namespace AppInmobiliaria.Controllers
                     CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
         }
-
     }
+
+
 }

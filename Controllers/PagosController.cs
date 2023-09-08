@@ -8,7 +8,7 @@ using AppInmobiliaria.Models;
 using Microsoft.AspNetCore.Authorization;
 namespace AppInmobiliaria.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class PagosController : Controller
     {
         public readonly RepoPagos repo = new RepoPagos();
@@ -99,6 +99,7 @@ namespace AppInmobiliaria.Controllers
         // POST: Pagos/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, Pago pago)
         {
             try

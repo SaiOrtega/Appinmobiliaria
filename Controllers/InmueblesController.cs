@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AppInmobiliaria.Controllers
 {
-    // [Authorize]
+    [Authorize]
     public class InmueblesController : Controller
     {
         public readonly RepoInmuebles repo = new RepoInmuebles();
@@ -56,7 +56,7 @@ namespace AppInmobiliaria.Controllers
 
         // POST: Inmuebles/Create
         [HttpPost]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public ActionResult Create(Inmueble inmueble)
         {
             try
@@ -97,7 +97,7 @@ namespace AppInmobiliaria.Controllers
 
         // POST: Inmuebles/Edit/5
         [HttpPost]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, Inmueble inmueble)
         {
             try
@@ -112,7 +112,7 @@ namespace AppInmobiliaria.Controllers
             }
         }
         // GET: Inmuebles/Delete/5
-        //[Authorize(Policy = "Admin")]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
             var res = repo.ObtenerUno(id);
@@ -129,7 +129,7 @@ namespace AppInmobiliaria.Controllers
         // POST: Inmuebles/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = "Admin")]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, Inmueble inmueble)
         {
             try

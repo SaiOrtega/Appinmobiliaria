@@ -5,6 +5,7 @@ namespace AppInmobiliaria.Models;
 
 public class RepoUsos
 {
+
     string connectionString = "Server=localhost;Database=imOrtega;User=root;Password=;SslMode=none";
 
     public RepoUsos()

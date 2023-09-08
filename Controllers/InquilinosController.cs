@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using AppInmobiliaria.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace AppInmobiliaria.Controllers
 {
+    [Authorize]
     public class InquilinosController : Controller
     {
         RepoInquilinos repo = new RepoInquilinos();
@@ -80,6 +82,7 @@ namespace AppInmobiliaria.Controllers
         }
 
         // GET: Inquilinos/Delete/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
             var res = repo.ObtenerUno(id);
@@ -89,7 +92,7 @@ namespace AppInmobiliaria.Controllers
         // POST: Inquilinos/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = "Admin")]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, Inquilino inquilino)
         {
             try

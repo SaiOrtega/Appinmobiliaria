@@ -78,11 +78,13 @@
             @Html.DisplayFor(model => model.propietarioId)
         </dd>
     </dl>
-
-    <form asp-action="Delete" id="deleteForm">
-        <input type="submit" value="Eliminar" class="btn btn-danger" />
-        <a asp-action="Index" class="btn btn-secondary">Regresar</a>
-    </form>
+    @if (User.IsInRole("Administrador"))
+    {
+        <form asp-action="Delete" id="deleteForm">
+            <input type="submit" value="Eliminar" class="btn btn-danger" />
+            <a asp-action="Index" class="btn btn-secondary">Regresar</a>
+        </form>
+    }
 </div>
 <script>
     document.getElementById('deleteForm').addEventListener('submit', function (event) {

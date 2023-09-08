@@ -1,10 +1,12 @@
 using System.Data;
+using Microsoft.AspNetCore.Authorization;
 using MySql.Data.MySqlClient;
 
 namespace AppInmobiliaria.Models;
 
 public class RepoTipos
 {
+
     string connectionString = "Server=localhost;Database=imOrtega;User=root;Password=;SslMode=none";
     public RepoTipos()
     {
