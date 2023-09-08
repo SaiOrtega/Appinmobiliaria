@@ -1,0 +1,69 @@
+@model AppInmobiliaria.Models.Usuario
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Perfil</h1>
+
+<div>
+    <h4>Usuario</h4>
+    <hr />
+    <div>
+
+        <hr />
+        <dl class="row">
+
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <dt>@Html.DisplayNameFor(model => model.Nombre)</dt>
+                            <dd>@Html.DisplayFor(model => model.Nombre)</dd>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <dt>@Html.DisplayNameFor(model => model.Apellido)</dt>
+                            <dd>@Html.DisplayFor(model => model.Apellido)</dd>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <dt>@Html.DisplayNameFor(model => model.Rol)</dt>
+                            <dd>@Html.DisplayFor(model => model.RolNombre)</dd>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <dt>@Html.DisplayNameFor(model => model.Email)</dt>
+                            <dd>@Html.DisplayFor(model => model.Email)</dd>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="row">
+
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @if (Model.Avatar != null)
+                            {
+                                <img src="@Model.Avatar" />
+                            }
+                            else
+                            {
+                                <img src="~/Uploads/avatar_0.png" />
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    <div>
+        @Html.ActionLink("Editar", "Edit", new { id = Model.Id}, new{@class="btn btn-success"})
+
+    </div>

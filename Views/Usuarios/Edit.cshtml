@@ -1,0 +1,116 @@
+@model AppInmobiliaria.Models.Usuario
+
+@{
+    ViewData["Title"] = "Edit";
+    String mensaje = TempData["error"] as String;
+}
+
+<h1>Editar</h1>
+
+<h4>Usuario</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input asp-for="Id" class="form-control" hidden />
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Nombre" class="control-label"></label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Apellido" class="control-label"></label>
+                <input asp-for="Apellido" class="form-control" />
+                <span asp-validation-for="Apellido" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            @if (User.IsInRole("Administrador"))
+            {
+                <div class="form-group">
+                    <label class="control-label">Rol</label>
+                    <select class="form-control" name="Rol">
+                        @foreach (var kvp in (IDictionary<int, string>)ViewBag.Roles)
+                        {
+                            @:<option @(kvp.Key == Model.Rol ? "selected" : "") value="@kvp.Key">@kvp.Value</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Rol" class="text-danger"></span>
+                </div>
+            }
+            <div class="form-group">
+                <input asp-for="Avatar" class="form-control" hidden /><br>
+                @if (Model.Avatar != null)
+                {
+                    <img src="@Model.Avatar" />
+                }
+                else
+                {
+                    <p>Sin Avatar</p>
+                }
+            </div>
+            <div class="form-group">
+                <label asp-for="AvatarFile" class="control-label">Cambiar Avatar</label>
+                <input type="file" name="AvatarFile" />
+                <span asp-validation-for="AvatarFile" class="text-danger"></span>
+            </div><br>
+            <div class="form-group">
+                <input type="submit" value="Guardar Cambios" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+
+    <div class="col-md-1">
+
+
+    </div>
+    <div class="col-md-4">
+
+
+        <form method="post" action="../CambiarContrasenia">
+            <div class="form-group">
+
+                <input name="idUs" value="@Model.Id" class="form-control" hidden />
+            </div>
+            <div class="form-group">
+                <label for="NContra">Ingrese una nueva contraseña</label>
+                <input name="NContra" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="NControl">Repita la nueva contraseña</label>
+                <input name="Ncontrol" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="UCVieja">Ingrese su contraseña actual</label>
+                <input name="UCVieja" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input name="Clave" value="@Model.Clave" hidden>
+
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Guardar Cambios" class="btn btn-primary" />
+            </div>
+        </form>
+        <div>
+            <p>@mensaje</p>
+        </div>
+    </div>
+
+
+</div>
+</div><br>
+
+<div>
+    <a asp-action="Index" class="btn btn-secondary">Regresar</a>
+</div>

@@ -5,7 +5,7 @@ using MySql.Data.MySqlClient;
 namespace AppInmobiliaria.Models;
 
 public class RepoUsuarios
-{   
+{
     String connectionString = "Server=localhost;Database=imOrtega;User=root;Password=;SslMode=none";
     //cambiar base de datos
     public RepoUsuarios()
@@ -67,15 +67,15 @@ public class RepoUsuarios
         using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             string sql = @"UPDATE usuario 
-					SET Nombre=@nombre, Apellido=@apellido, Avatar=@avatar, Email=@email, Rol=@rol
+					SET Nombre=@nombre, Apellido=@apellido,Email=@email, Avatar=@avatar, Rol=@rol
 					WHERE Id = @id";
             using (MySqlCommand command = new MySqlCommand(sql, connection))
             {
                 command.CommandType = CommandType.Text;
                 command.Parameters.AddWithValue("@nombre", usuario.Nombre);
                 command.Parameters.AddWithValue("@apellido", usuario.Apellido);
-                command.Parameters.AddWithValue("@avatar", usuario.Avatar);
                 command.Parameters.AddWithValue("@email", usuario.Email);
+                command.Parameters.AddWithValue("@avatar", usuario.Avatar);
                 command.Parameters.AddWithValue("@clave", usuario.Clave);
                 command.Parameters.AddWithValue("@rol", usuario.Rol);
                 command.Parameters.AddWithValue("@id", usuario.Id);
