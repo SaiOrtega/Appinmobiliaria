@@ -1,0 +1,82 @@
+@model IEnumerable<AppInmobiliaria.Models.Contrato>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Listado de Contratos</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-success">Agregar</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InmuebleId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InquilinoId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaInicio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaFinal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MontoMensual)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.InmuebleId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.InquilinoId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FechaInicio)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FechaFinal)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MontoMensual)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Editar", "Edit", new { /*id=item.PrimaryKey */ },new{@class ="btn btn-warning"})
+                        @Html.ActionLink("Detalle", "Details", new { /* id=item.PrimaryKey */ }, new {@class = "btn btn-dark"})
+
+                        @if (User.IsInRole("Administrador"))
+                        {
+                            @Html.ActionLink("Eliminar", "Delete", new { /* id=item.PrimaryKey */ }, new{@class="btn btn-danger"})
+                        }
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td>
+                    <p>El modelo es nulo o no contiene datos.</p>
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>

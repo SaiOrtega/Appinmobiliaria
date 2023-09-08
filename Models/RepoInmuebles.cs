@@ -26,7 +26,7 @@ public class RepoInmuebles
             {
                 command.CommandType = CommandType.Text;
                 command.Parameters.AddWithValue("@direccion", inmueble.direccion);
-                command.Parameters.AddWithValue("@ambites", inmueble.ambientes);
+                command.Parameters.AddWithValue("@ambientes", inmueble.ambientes);
                 command.Parameters.AddWithValue("@latitud", inmueble.latitud);
                 command.Parameters.AddWithValue("@longitud", inmueble.longitud);
                 command.Parameters.AddWithValue("@precio", inmueble.precio);
@@ -152,7 +152,7 @@ public class RepoInmuebles
 
             var command = new MySqlCommand(sql, conn);
 
-            command.Parameters.AddWithValue("@id", i.Id);
+
             command.Parameters.AddWithValue("@direccion", i.direccion);
             command.Parameters.AddWithValue("@uso", i.uso);
             command.Parameters.AddWithValue("@tipo", i.tipo);
@@ -161,8 +161,9 @@ public class RepoInmuebles
             command.Parameters.AddWithValue("@longitud", i.longitud);
             command.Parameters.AddWithValue("@precio", i.precio);
             command.Parameters.AddWithValue("@superficie", i.superficie);
-            command.Parameters.AddWithValue("@disponible", i.estado);
-            command.Parameters.AddWithValue("@propietarioId", i.propietarioId);
+            command.Parameters.AddWithValue("@estado", i.estado);
+            command.Parameters.AddWithValue("@propietario_Id", i.propietarioId);
+            command.Parameters.AddWithValue("@id", i.Id);
 
             conn.Open();
             res = command.ExecuteNonQuery();
@@ -202,3 +203,6 @@ public class RepoInmuebles
 
     }
 }
+
+
+

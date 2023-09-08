@@ -1,0 +1,61 @@
+@model AppInmobiliaria.Models.Contrato
+
+@{
+    ViewData["Title"] = "Create";
+    var inm = (IList<Inmueble>)ViewBag.inmuebles;
+    var inq = (IList<Inquilino>)ViewBag.inquilinos;
+}
+
+<h1>Generar</h1>
+
+<h4>Contrato</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="InmuebleId" class="control-label"></label>
+                <select class="form-control" name="InmuebleId">
+                    @foreach (var item in inm)
+                    {
+                        @:<option value="@item.Id">@item.Id- @item.direccion</option>
+                    }
+                </select>
+                <span asp-validation-for="InmuebleId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InquilinoId" class="control-label"></label>
+                <select class="form-control" name="InquilinoId">
+                    @foreach (var item in inq)
+                    {
+                        @:<option value="@item.Id">@item.ToString()</option>
+                    }
+                </select>
+                <span asp-validation-for="InquilinoId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaInicio" class="control-label"></label>
+                <input asp-for="FechaInicio" class="form-control" />
+                <span asp-validation-for="FechaInicio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaFinal" class="control-label"></label>
+                <input asp-for="FechaFinal" class="form-control" />
+                <span asp-validation-for="FechaFinal" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MontoMensual" class="control-label"></label>
+                <input asp-for="MontoMensual" class="form-control" />
+                <span asp-validation-for="MontoMensual" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Generar" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" class="btn btn-secondary">Regresar</a>
+</div>

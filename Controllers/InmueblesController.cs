@@ -29,12 +29,13 @@ namespace AppInmobiliaria.Controllers
         public ActionResult Details(int id)
         {
             var inmueble = repo.ObtenerUno(id);
+
             RepoPropietarios repoProp = new RepoPropietarios();
-            ViewBag.propietario = repoProp.ObtenerUno(id);
-            ViewBag.pTodos = repoProp.ObtenerTodos();
             RepoUsos repoUso = new RepoUsos();
-            ViewBag.uso = repoUso.ObtenerTodos();
             RepoTipos repoTipo = new RepoTipos();
+
+            ViewBag.propietario = repoProp.ObtenerTodos();
+            ViewBag.uso = repoUso.ObtenerTodos();
             ViewBag.tipo = repoTipo.ObtenerTodos();
 
             return View(inmueble);
@@ -44,19 +45,18 @@ namespace AppInmobiliaria.Controllers
         public ActionResult Create()
         {
             RepoPropietarios repoProp = new RepoPropietarios();
-            ViewBag.propietario = repoProp.ObtenerTodos();
-
             RepoUsos repoUso = new RepoUsos();
-            ViewBag.uso = repoUso.ObtenerTodos();
-
             RepoTipos repoTipo = new RepoTipos();
+
+            ViewBag.propietario = repoProp.ObtenerTodos();
+            ViewBag.uso = repoUso.ObtenerTodos();
             ViewBag.tipo = repoTipo.ObtenerTodos();
             return View();
         }
 
         // POST: Inmuebles/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public ActionResult Create(Inmueble inmueble)
         {
             try

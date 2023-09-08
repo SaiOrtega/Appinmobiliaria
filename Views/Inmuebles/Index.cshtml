@@ -27,12 +27,6 @@
                 @Html.DisplayNameFor(model => model.ambientes)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.latitud)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.longitud)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.precio)
             </th>
             <th>
@@ -64,12 +58,6 @@
                     @Html.DisplayFor(modelItem => item.ambientes)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.latitud)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.longitud)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => item.precio)
                 </td>
                 <td>
@@ -79,15 +67,19 @@
             @(item.estado ? "Disponible" : "No Disponible")
             </td> *@
                 <td>
-                    @Html.DisplayFor(modelItem => item.propietarioId)
-
+                    @{
+                        var fullName = (item.duenio.Nombre + " " + item.duenio.Apellido);
+                        @Html.DisplayFor(modelItem => fullName)
+                    }
                 </td>
                 <td>
                     @Html.ActionLink("Editar", "Edit", new { id=item.Id}, new{@class="btn btn-warning"})
                     @Html.ActionLink("Detalle", "Details", new { id=item.Id },new{@class="btn btn-dark"})
-                    @Html.ActionLink("Eliminar", "Delete", new { id=item.Id },new{@class="btn btn-danger"})
-                </td>
-            </tr>
+                    @if (User.IsInRole("Administrador"))
+                        @Html.ActionLink("Eliminar", "Delete", new { id=item.Id },new{@class="btn btn-danger"})
+
+                    </td>
+                </tr>
         }
     </tbody>
 </table>

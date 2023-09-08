@@ -5,15 +5,19 @@ namespace AppInmobiliaria.Models;
 
 public class Contrato
 {
+    [Display(Name = "Cod")]
     public int? Id { get; set; }
+    [Display(Name = "n°- inmueble")]
     public int? InmuebleId { get; set; }
+
+    [Display(Name = "Alquilado a")]
     public int? InquilinoId { get; set; }
 
-    [DataType(DataType.Date)]
+    [DataType(DataType.DateTime)]
     [Display(Name = "Fecha de Contrato")]
     public DateTime? FechaInicio { get; set; }
 
-    [DataType(DataType.Date)]
+    [DataType(DataType.DateTime)]
     [FechaActual(ErrorMessage = null)]
     [Display(Name = "Fecha de Vencimiento")]
     public DateTime? FechaFinal { get; set; }

@@ -1,0 +1,57 @@
+@model AppInmobiliaria.Models.Pago
+
+@{
+    ViewData["Title"] = "Create";
+    var cp = (IList<Contrato>)ViewBag.contratos;
+}
+
+<h1>Generar Pagos</h1>
+
+<h4>Pago</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label class="control-label">Detalle de Contrato</label>
+
+                <select class="form-control" name="contratoId">
+                    @foreach (var item in cp)
+                    {
+                        @:<option value="@item.Id">@item.ToString()</option>
+                    }
+                </select>
+                <span asp-validation-for="contratoId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="numeroCuota" class="control-label"></label>
+                <input asp-for="numeroCuota" class="form-control" />
+                <span asp-validation-for="numeroCuota" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="importe" class="control-label"></label>
+                <input asp-for="importe" class="form-control" />
+                <span asp-validation-for="importe" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="fechaPago" class="control-label"></label>
+                <input asp-for="fechaPago" class="form-control" />
+                <span asp-validation-for="fechaPago" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="periodo" class="control-label"></label>
+                <input asp-for="periodo" class="form-control" />
+                <span asp-validation-for="periodo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Crear" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" class="btn btn-secondary">Regresar</a>
+</div>

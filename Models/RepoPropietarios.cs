@@ -5,7 +5,7 @@ namespace AppInmobiliaria.Models;
 
 public class RepoPropietarios
 {
-    String connectionString = "Server=localhost;Database=imOrtega;User=root;Password=;SslMode=none";
+    string connectionString = "Server=localhost;Database=imOrtega;User=root;Password=;SslMode=none";
 
     public RepoPropietarios()
     {
@@ -114,7 +114,6 @@ public class RepoPropietarios
 
             var command = new MySqlCommand(sql, conn);
 
-            command.Parameters.AddWithValue("@id", p.Id);
             command.Parameters.AddWithValue("@dni", p.Dni);
             command.Parameters.AddWithValue("@nombre", p.Nombre);
             command.Parameters.AddWithValue("@apellido", p.Apellido);
@@ -122,6 +121,7 @@ public class RepoPropietarios
             command.Parameters.AddWithValue("@telefono", p.Telefono);
             command.Parameters.AddWithValue("@email", p.Email);
             command.Parameters.AddWithValue("@nacimiento", p.FechaNacimiento);
+            command.Parameters.AddWithValue("@id", p.Id);
             conn.Open();
             res = command.ExecuteNonQuery();
             conn.Close();

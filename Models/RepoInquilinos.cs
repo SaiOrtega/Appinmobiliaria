@@ -114,7 +114,6 @@ public class RepoInquilinos
 
             var command = new MySqlCommand(sql, conn);
 
-            command.Parameters.AddWithValue("@id", i.Id);
             command.Parameters.AddWithValue("@dni", i.Dni);
             command.Parameters.AddWithValue("@nombre", i.Nombre);
             command.Parameters.AddWithValue("@apellido", i.Apellido);
@@ -122,6 +121,7 @@ public class RepoInquilinos
             command.Parameters.AddWithValue("@telefono", i.Telefono);
             command.Parameters.AddWithValue("@email", i.Email);
             command.Parameters.AddWithValue("@nacimiento", i.FechaNacimiento);
+            command.Parameters.AddWithValue("@id", i.Id);
             conn.Open();
             res = command.ExecuteNonQuery();
             conn.Close();

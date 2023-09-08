@@ -68,10 +68,10 @@
 </div>
 <script>
     document.getElementById('deleteForm').addEventListener('submit', function (event) {
-        event.preventDefault(); // Evita que el formulario se envíe automáticamente
+        event.preventDefault();
 
         if (confirm('¿Estás seguro de que deseas eliminar este elemento?')) {
-            this.submit(); // Envía el formulario si el usuario confirma
+            this.submit();
         }
     });
 </script>
