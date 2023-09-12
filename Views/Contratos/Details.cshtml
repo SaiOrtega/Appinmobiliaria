@@ -1,0 +1,50 @@
+@model AppInmobiliaria.Models.Contrato
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Detalles del Contrato</h1>
+
+<div>
+    <h4>Contrato</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.InmuebleId)
+        </dt>
+        <dd class="col-sm-10">
+            @* @Html.DisplayFor(model => model.InmuebleId) *@
+            @Model.inmueble.ToString()
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.InquilinoId)
+        </dt>
+        <dd class="col-sm-10">
+            @* @Html.DisplayFor(model => model.InquilinoId) *@
+            @Model.inquilino.ToString()
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FechaInicio)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FechaInicio)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FechaFinal)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FechaFinal)
+        </dd>
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Editar", "Edit", new { id = Model.Id},new{@class="btn btn-dark"})
+    <a asp-action="Index" class="btn btn-secondary">Regresar</a>
+</div>

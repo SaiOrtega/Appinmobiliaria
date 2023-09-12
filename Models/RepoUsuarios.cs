@@ -13,25 +13,27 @@ public class RepoUsuarios
 
     }
 
+
     public int Alta(Usuario usuario)
     {
         int res = -1;
         using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             string sql = @"INSERT INTO Usuario
-					(Nombre, Apellido, Avatar, Email, Clave, Rol) 
-					VALUES (@nombre, @apellido, @avatar, @email, @clave, @rol);
+					(Nombre, Apellido,Email, Avatar, Clave, Rol) 
+					VALUES (@nombre, @apellido,@email, @avatar, @clave, @rol);
 					SELECT LAST_INSERT_ID();";//devuelve el id insertado (LAST_INSERT_ID para mysql)
             using (MySqlCommand command = new MySqlCommand(sql, connection))
             {
                 command.CommandType = CommandType.Text;
                 command.Parameters.AddWithValue("@nombre", usuario.Nombre);
                 command.Parameters.AddWithValue("@apellido", usuario.Apellido);
+                command.Parameters.AddWithValue("@email", usuario.Email);
                 if (String.IsNullOrEmpty(usuario.Avatar))
                     command.Parameters.AddWithValue("@avatar", DBNull.Value);
                 else
                     command.Parameters.AddWithValue("@avatar", usuario.Avatar);
-                command.Parameters.AddWithValue("@email", usuario.Email);
+
                 command.Parameters.AddWithValue("@clave", usuario.Clave);
                 command.Parameters.AddWithValue("@rol", usuario.Rol);
                 connection.Open();
@@ -43,7 +45,7 @@ public class RepoUsuarios
         return res;
     }
 
-    [Authorize(Policy = "Administrador")]
+
     public int Baja(int id)
     {
         int res = -1;
@@ -61,6 +63,8 @@ public class RepoUsuarios
         }
         return res;
     }
+
+
     public int Modificacion(Usuario usuario)
     {
         int res = -1;
@@ -76,7 +80,6 @@ public class RepoUsuarios
                 command.Parameters.AddWithValue("@apellido", usuario.Apellido);
                 command.Parameters.AddWithValue("@email", usuario.Email);
                 command.Parameters.AddWithValue("@avatar", usuario.Avatar);
-                command.Parameters.AddWithValue("@clave", usuario.Clave);
                 command.Parameters.AddWithValue("@rol", usuario.Rol);
                 command.Parameters.AddWithValue("@id", usuario.Id);
                 connection.Open();
@@ -87,13 +90,13 @@ public class RepoUsuarios
         return res;
     }
 
+
     public IList<Usuario> ObtenerTodos()
     {
         IList<Usuario> res = new List<Usuario>();
         using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
-            string sql = @"
-					SELECT Id, Nombre, Apellido, Avatar, Email, Clave, Rol
+            string sql = @"SELECT Id, Nombre, Apellido,Email, Clave, Rol, Avatar 
 					FROM Usuario";
             using (MySqlCommand command = new MySqlCommand(sql, connection))
             {
@@ -129,13 +132,14 @@ public class RepoUsuarios
         return res;
     }
 
+
     public Usuario ObtenerPorId(int id)
     {
         Usuario? usuario = null;
         using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             string sql = @"SELECT 
-					Id, Nombre, Apellido, Avatar, Email, Clave, Rol 
+					Id, Nombre, Apellido,Email,Clave, Rol, Avatar  
 					FROM Usuario
 					WHERE Id=@id";
             using (MySqlCommand command = new MySqlCommand(sql, connection))
@@ -171,13 +175,14 @@ public class RepoUsuarios
         return usuario;
     }
 
+
     public Usuario ObtenerPorEmail(string email)
     {
         Usuario? usuario = null;
         using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             string sql = @"SELECT
-					Id, Nombre, Apellido, Avatar, Email, Clave, Rol FROM Usuario
+					Id, Nombre, Apellido,Email, Clave, Rol, Avatar FROM Usuario
 					WHERE Email=@email";
             using (MySqlCommand command = new MySqlCommand(sql, connection))
             {
@@ -211,6 +216,7 @@ public class RepoUsuarios
         }
         return usuario;
     }
+
 
     public void ActualizarContraseña(int id, String Contra)
     {

@@ -6,7 +6,7 @@ namespace AppInmobiliaria.Models;
 
 public class RepoPropietarios
 {
-   
+
     string connectionString = "Server=localhost;Database=imOrtega;User=root;Password=;SslMode=none";
 
     public RepoPropietarios()
@@ -131,7 +131,7 @@ public class RepoPropietarios
         return res;
     }
 
-    [Authorize(Policy = "Administrador")]
+
     public int Eliminar(int id)
     {
         int res = 0;

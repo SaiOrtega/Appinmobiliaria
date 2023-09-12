@@ -80,6 +80,7 @@ namespace AppInmobiliaria.Controllers
         }
 
         // GET: Propietarios/Delete/5
+
         [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {

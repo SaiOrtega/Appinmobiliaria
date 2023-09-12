@@ -44,4 +44,9 @@ public class Inmueble
     {
     }
 
+    public override string ToString()
+    {
+        return $"{direccion}";
+    }
+
 }

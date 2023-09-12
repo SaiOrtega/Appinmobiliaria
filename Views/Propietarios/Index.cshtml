@@ -68,11 +68,12 @@
                     @Html.DisplayFor(modelItem => item.FechaNacimiento)
                 </td>
                 <td>
-                    @Html.ActionLink("Editar", "Editar", new { id=item.Id }, new{@class="btn btn-warning"})
-                    @Html.ActionLink("Detalle", "Detalle", new { id=item.Id },new{@class="btn btn-dark"})
+                    @Html.ActionLink("Editar", "Edit", new { id=item.Id }, new{@class="btn btn-warning"})
+                    @Html.ActionLink("Detalle", "Details", new { id=item.Id },new{@class="btn btn-dark"})
+
                     @if (User.IsInRole("Administrador"))
                     {
-                        @Html.ActionLink("Eliminar", "Eliminar", new { id=item.Id}, new{@class="btn btn-danger"})
+                        @Html.ActionLink("Eliminar", "Delete", new { id=item.Id}, new{@class="btn btn-danger"})
                     }
 
                 </td>

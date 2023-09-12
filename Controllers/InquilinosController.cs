@@ -85,9 +85,20 @@ namespace AppInmobiliaria.Controllers
         [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
-            var res = repo.ObtenerUno(id);
-            return View(res);
+            if (!User.Identity.IsAuthenticated)
+            {
+                var res = repo.ObtenerUno(id);
+                return View(res);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+
         }
+
+
 
         // POST: Inquilinos/Delete/5
         [HttpPost]

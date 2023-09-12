@@ -27,7 +27,6 @@
                 <input asp-for="Apellido" class="form-control" />
                 <span asp-validation-for="Apellido" class="text-danger"></span>
             </div>
-
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
                 <input asp-for="Email" class="form-control" />
@@ -45,6 +44,13 @@
                         }
                     </select>
                     <span asp-validation-for="Rol" class="text-danger"></span>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <label class="control-label">Rol</label>
+                    <input type="text" class="form-control" name="Rol" value="@Model.Rol" readonly />
                 </div>
             }
             <div class="form-group">
@@ -106,11 +112,7 @@
             <p>@mensaje</p>
         </div>
     </div>
-
-
 </div>
-</div><br>
-
 <div>
     <a asp-action="Index" class="btn btn-secondary">Regresar</a>
 </div>

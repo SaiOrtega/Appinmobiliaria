@@ -62,8 +62,13 @@
 </div>
 <div>
     @Html.ActionLink("Editar", "Edit", new { id = Model.Id},new {@class = "btn btn-primary"})
-    @Html.ActionLink("Eliminar", "Delete", new { id = Model.Id },new { @class = "btn btn-danger delete-link",onclick =
+
+    @if (User.IsInRole("Administrador"))
+    {
+
+        @Html.ActionLink("Eliminar", "Delete", new { id = Model.Id },new { @class = "btn btn-danger delete-link",onclick =
     "return confirm('¿Estás seguro de que deseas eliminar este elemento?');"})
+    }
     <a asp-action="Index" class="btn btn-secondary">Regresar</a>
 </div>
 

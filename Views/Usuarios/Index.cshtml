@@ -56,8 +56,12 @@
                     @Html.DisplayFor(modelItem => item.RolNombre)
                 </td>
                 <td>
-                    @Html.ActionLink("Editar", "Edit", new { id = item.Id}, new{@class="btn btn-dark"})
-                    @Html.ActionLink("Eliminar", "Delete", new { id = item.Id }, new{@class="btn btn-danger"})
+                    @Html.ActionLink("Editar", "edit", new { id = item.Id}, new{@class="btn btn-dark"})
+
+                    @if (User.IsInRole("Administrador"))
+                    {
+                        @Html.ActionLink("Eliminar", "Delete", new { id=item.Id}, new{@class="btn btn-danger"})
+                    }
 
                 </td>
             </tr>

@@ -115,15 +115,22 @@ namespace AppInmobiliaria.Controllers
         [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
-            var res = repo.ObtenerUno(id);
-            RepoPropietarios repoProp = new RepoPropietarios();
-            ViewBag.propietario = repoProp.ObtenerTodos();
-            RepoUsos repoUso = new RepoUsos();
-            ViewBag.uso = repoUso.ObtenerTodos();
-            RepoTipos repoTipo = new RepoTipos();
-            ViewBag.tipo = repoTipo.ObtenerTodos();
+            if (!User.Identity.IsAuthenticated)
+            {
+                var res = repo.ObtenerUno(id);
+                RepoPropietarios repoProp = new RepoPropietarios();
+                ViewBag.propietario = repoProp.ObtenerTodos();
+                RepoUsos repoUso = new RepoUsos();
+                ViewBag.uso = repoUso.ObtenerTodos();
+                RepoTipos repoTipo = new RepoTipos();
+                ViewBag.tipo = repoTipo.ObtenerTodos();
+                return View(res);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
-            return View(res);
         }
 
         // POST: Inmuebles/Delete/5

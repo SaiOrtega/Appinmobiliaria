@@ -110,7 +110,7 @@ public class RepoContratos
         using (MySqlConnection conn = new MySqlConnection(connectionString))
         {
             var sql =
-             @"SELECT c.id, c.inmueble_id, c.inquilino_id, c.fecha_inicio, c.fecha_fin, c.monto_alquiler, inmu.Id, inmu.direccion,inmu.uso,inmu.estado,inqui.Dni,inqui.Nombre, inqui.Apellido FROM contrato c JOIN inmueble inmu ON c.inmueble_id = inmu.id JOIN inquilino inqui ON inqui.Id = c.inquilino_id ORDER BY c.FechaFinal DESC";
+             @"SELECT c.id, c.inmueble_id, c.inquilino_id, c.fecha_inicio, c.fecha_fin, c.monto_alquiler,inmu.Id,inmu.direccion,inmu.uso,inmu.estado,inqui.Id,inqui.Dni,inqui.Nombre, inqui.Apellido FROM contrato c JOIN inmueble inmu ON c.inmueble_id = inmu.id JOIN inquilino inqui ON inqui.Id = c.inquilino_id where c.id = @id  ORDER BY c.fecha_fin DESC ";
 
             using (var command = new MySqlCommand(sql, conn))
             {
@@ -122,18 +122,18 @@ public class RepoContratos
                     {
                         contrato = new Contrato
                         {
-                            Id = reader.GetInt32(1),
-                            InmuebleId = reader.GetInt32(2),
-                            InquilinoId = reader.GetInt32(3),
-                            FechaInicio = reader.GetDateTime(4),
-                            FechaFinal = reader.GetDateTime(5),
-                            MontoMensual = reader.GetDecimal(6),
+                            Id = reader.GetInt32(0),
+                            InmuebleId = reader.GetInt32(1),
+                            InquilinoId = reader.GetInt32(2),
+                            FechaInicio = reader.GetDateTime(3),
+                            FechaFinal = reader.GetDateTime(4),
+                            MontoMensual = reader.GetDecimal(5),
                             inmueble = new Inmueble
                             {
-                                Id = reader.GetInt32(7),
-                                direccion = reader.GetString(8),
-                                uso = reader.GetInt32(9),
-                                estado = reader.GetBoolean(10)
+                                Id = reader.GetInt32(6),
+                                direccion = reader.GetString(7),
+                                uso = reader.GetInt32(8),
+                                estado = reader.GetBoolean(9)
                             },
                             inquilino = new Inquilino
                             {
@@ -329,6 +329,29 @@ public class RepoContratos
         }
         return contador;
 
+
+    }
+    public int TraerContratoEValido(DateTime? inicial, DateTime? final, int? inmId, int? contratoId)
+    {
+        int cont = 0;
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
+        {
+            var sql = @"SELECT COUNT(*) FROM contrato 
+            WHERE inmueble_id = @inmId  AND(Id != @contratoId)AND ((@FechaInicio BETWEEN contrato.fecha_inicio AND contrato.fecha_fin) OR (@FechaFinal BETWEEN contrato.fecha_inicio AND contrato.fecha_fin))";
+
+            using (var command = new MySqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@inmId", inmId);
+                command.Parameters.AddWithValue("@FechaInicio", inicial);
+                command.Parameters.AddWithValue("@FechaFinal", final);
+                command.Parameters.AddWithValue("@contratoId", contratoId);
+                connection.Open();
+                cont = Convert.ToInt32(command.ExecuteScalar());
+            }
+
+        }
+
+        return cont;
 
     }
 

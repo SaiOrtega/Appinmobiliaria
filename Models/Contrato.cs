@@ -13,13 +13,13 @@ public class Contrato
     [Display(Name = "Alquilado a")]
     public int? InquilinoId { get; set; }
 
-    [DataType(DataType.DateTime)]
     [Display(Name = "Fecha de Contrato")]
+    [DataType(DataType.DateTime)]
     public DateTime? FechaInicio { get; set; }
 
-    [DataType(DataType.DateTime)]
-    [FechaActual(ErrorMessage = null)]
     [Display(Name = "Fecha de Vencimiento")]
+    [DataType(DataType.DateTime)]
+    // [FechaActual(ErrorMessage = null)]
     public DateTime? FechaFinal { get; set; }
 
     [Display(Name = "Monto de Contrato")]

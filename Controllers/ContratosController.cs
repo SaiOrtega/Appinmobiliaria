@@ -62,14 +62,25 @@ namespace AppInmobiliaria.Controllers
         }
 
 
-
+        //ver porque no trae el ID
         // GET: Contratos/Details/5
         public ActionResult Details(int id)
         {
-            var contrato = repo.ObtenerUno(id);
+            Contrato contrato = null;
+            try
+            {
+                contrato = repo.ObtenerUno(id);
+                return View(contrato);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = "Ocurrio un error al obtener los datos";
+            }
 
             return View(contrato);
         }
+
+
 
         // GET: Contratos/Create
         public ActionResult Create()
@@ -137,38 +148,85 @@ namespace AppInmobiliaria.Controllers
 
             }
 
-
         }
-
 
         // GET: Contratos/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var contrato = repo.ObtenerUno(id);
+            RepoInmuebles repoInmuebles = new RepoInmuebles();
+            RepoInquilinos repoInquilinos = new RepoInquilinos();
+            ViewBag.inmuebles = repoInmuebles.ObtenerTodos();
+            ViewBag.inquilinos = repoInquilinos.ObtenerTodos();
+
+            return View(contrato);
         }
 
         // POST: Contratos/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Contrato contrato)
         {
-            try
+            var contexVal = new ValidationContext(contrato, serviceProvider: null, items: null);
+            var isValid = Validator.TryValidateObject(contrato, contexVal, null, true);
+            if (isValid)
             {
-                // TODO: Add update logic here
+                int cont = repo.TraerContratoEValido(contrato.FechaInicio, contrato.FechaFinal, contrato.InmuebleId, contrato.Id);
+                if (cont == 0)
+                {
 
-                return RedirectToAction(nameof(Index));
+                    try
+                    {
+                        // TODO: Add update logic here
+                        int res = repo.Actualizar(contrato);
+                        return RedirectToAction(nameof(Index));
+                    }
+                    catch
+                    {
+                        return View();
+                    }
+
+                }
+                else
+                {
+                    ModelState.AddModelError("FechaFinal", "El inmueble no está disponible en ese periodo");
+
+                    RepoInmuebles reInmu = new RepoInmuebles();
+                    RepoInquilinos reInqui = new RepoInquilinos();
+
+                    ViewBag.inmuebles = reInmu.ObtenerTodos();
+                    ViewBag.inquilinos = reInqui.ObtenerTodos();
+
+                    return View(contrato);
+                }
             }
-            catch
+            else
             {
-                return View();
+                RepoInmuebles reInmu = new RepoInmuebles();
+                RepoInquilinos reInqui = new RepoInquilinos();
+
+                ViewBag.inmuebles = reInmu.ObtenerTodos();
+                ViewBag.inquilinos = reInqui.ObtenerTodos();
+
+                return View(contrato);
             }
+
         }
+
 
         // GET: Contratos/Delete/5
         [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
-            return View();
+            if (User.Identity.IsAuthenticated)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
         }
 
         // POST: Contratos/Delete/5

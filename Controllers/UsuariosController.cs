@@ -15,11 +15,11 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace AppInmobiliaria.Controllers
 {
-    [Authorize]
+    [Authorize(Policy = "Administrador")]
+
     public class UsuariosController : Controller
     {
         private readonly IConfiguration configuration;
-
         private readonly IWebHostEnvironment environment;
 
         public UsuariosController(IConfiguration configuration, IWebHostEnvironment environment)
@@ -30,10 +30,19 @@ namespace AppInmobiliaria.Controllers
         public readonly RepoUsuarios repoUsuarios = new RepoUsuarios();
 
         // GET: Usuarios
+        [Authorize(Policy = "Administrador")]
         public ActionResult Index()
         {
-            var usuarios = repoUsuarios.ObtenerTodos();
-            return View(usuarios);
+            if (!User.Identity.IsAuthenticated)
+            {
+                var usuarios = repoUsuarios.ObtenerTodos();
+                return View(usuarios);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
         }
 
         // GET: Usuarios/Details/5
@@ -43,7 +52,6 @@ namespace AppInmobiliaria.Controllers
             var e = repoUsuarios.ObtenerPorId(id);
             return View(e);
         }
-
 
         [AllowAnonymous]
         //[Authorize(Policy = "Administrador")]
@@ -157,8 +165,6 @@ namespace AppInmobiliaria.Controllers
                     return RedirectToAction(vista, new { Id = idUs });
                 }
 
-
-
             }
             else
             {
@@ -170,7 +176,7 @@ namespace AppInmobiliaria.Controllers
         }
 
 
-        // GET: Usuarios/Edit/5
+        // GET: Usuarios/Edit/5       
         //[Authorize(Policy = "Administrador")]
         public ActionResult Edit(int id)
         {
@@ -275,7 +281,7 @@ namespace AppInmobiliaria.Controllers
                 return View();
             }
         }
-        // [Authorize]
+        //[Authorize]
         public IActionResult Avatar()
         {
             var u = repoUsuarios.ObtenerPorEmail(User.Identity.Name);
@@ -314,7 +320,6 @@ namespace AppInmobiliaria.Controllers
 
         [AllowAnonymous]
         // GET: Usuarios/Login/
-
         public ActionResult Login(string returnUrl)
         {
             TempData["returnUrl"] = returnUrl;
