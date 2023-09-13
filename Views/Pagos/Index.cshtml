@@ -3,9 +3,9 @@
 @{
     ViewData["Title"] = "Index";
     int? idContrato = null;
-    if (ViewBag.id != null)
+    if (ViewBag.md != null)
     {
-        idContrato = ViewBag.id;
+        idContrato = ViewBag.md;
     }
 }
 
@@ -19,9 +19,6 @@
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.contratoId)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.importe)
@@ -43,9 +40,6 @@
                     @Html.DisplayFor(modelItem => item.id)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.contratoId)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => item.importe)
                 </td>
                 <td>
@@ -56,7 +50,8 @@
                 </td>
                 <td>
                     @Html.ActionLink("Editar", "Edit", new { /* id=item.PrimaryKey */ }, new{@class="btn btn-warning"})
-                    @Html.ActionLink("Detalle", "Details", new { /* id=item.PrimaryKey */ }, new{@class="btn btn-dark"})
+                    @* @Html.ActionLink("Detalle", "Details", new { /* id=item.PrimaryKey */ }, new{@class="btn btn-dark"})
+                *@
 
                     @if (User.IsInRole("Administrador"))
                     {

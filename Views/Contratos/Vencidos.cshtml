@@ -1,14 +1,10 @@
 @model IEnumerable<AppInmobiliaria.Models.Contrato>
 
-@{
-    ViewData["Title"] = "Index";
-}
 
-<h1>Listado de Contratos</h1>
 
-<p>
-    <a asp-action="Create" class="btn btn-success">Agregar</a>
-</p>
+<h1>Listado de Contratos Vencidos</h1>
+
+
 <table class="table">
     <thead>
         <tr>
@@ -30,6 +26,10 @@
             <th>
                 @Html.DisplayNameFor(model => model.MontoMensual)
             </th>
+            <th>
+                <b>Pagos</b>
+            </th>
+
             <th></th>
         </tr>
     </thead>

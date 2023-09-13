@@ -2,7 +2,8 @@
 
 @{
     ViewData["Title"] = "Create";
-    double m = ViewBag.contratoId;
+    int cId = ViewBag.contratoId;
+    double mMora = ViewBag.montoM;
 }
 
 <h1>Generar Pagos</h1>
@@ -16,7 +17,7 @@
 
             <div class="form-group">
                 <label class="control-label">Detalle de Contrato</label>
-                <input asp-for="contratoId" value="@m" class="form-control" hidden />
+                <input asp-for="contratoId" value="@cId" class="form-control" hidden />
                 <span asp-validation-for="contratoId" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -26,7 +27,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="importe" class="control-label"></label>
-                <input asp-for="importe" class="form-control" />
+                <input asp-for="importe" class="form-control" value="@mMora" />
                 <span asp-validation-for="importe" class="text-danger"></span>
             </div>
             <div class="form-group">

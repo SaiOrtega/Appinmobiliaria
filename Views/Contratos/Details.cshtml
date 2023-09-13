@@ -47,4 +47,8 @@
 <div>
     @Html.ActionLink("Editar", "Edit", new { id = Model.Id},new{@class="btn btn-dark"})
     <a asp-action="Index" class="btn btn-secondary">Regresar</a>
+    @if (User.IsInRole("Administrador"))
+    {
+        @Html.ActionLink("Eliminar", "Delete", new { id=Model.Id }, new{@class="btn btn-danger"})
+    }
 </div>

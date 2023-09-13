@@ -10,31 +10,33 @@ public class RepoPagos
     public RepoPagos()
     {
     }
-    public List<Pago> ObtenerTodos(int? id)
+    public List<Pago> ObtenerTodos(int? md)
     {
         List<Pago> listaPagos = new List<Pago>();
 
-        if (id != null && id != 0)
+        if (md != null && md != 0)
         {
 
-            var sql = "SELECT id, importe, fecha_pago, periodoi.apellido, p.apellido FROM pago,inquilino i,propietario p WHERE contrato_id = @id";
+            var sql = "SELECT id, importe, fecha_pago, periodo FROM pago WHERE contrato_id = @id";
             using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
                 using (var command = new MySqlCommand(sql, conn))
                 {
-                    command.Parameters.AddWithValue("@id", id);
+                    command.Parameters.AddWithValue("@id", md);
                     conn.Open();
                     var reader = command.ExecuteReader();
                     while (reader.Read())
                     {
-                        Pago p = new Pago();
-                        p.id = reader.GetInt32(0);
-                        p.importe = reader.GetDecimal(1);
-                        p.fechaPago = reader.GetDateTime(2);
-                        p.periodo = reader.GetDateTime(3);
-                        p.contratoId = reader.GetInt32(4);
+                        Pago pago = new Pago
+                        {
+                            id = reader.GetInt32("Id"),
+                            contratoId = md,
+                            importe = reader.GetDecimal("importe"),
+                            fechaPago = reader.GetDateTime("fecha_pago"),
+                            periodo = reader.GetDateTime("periodo")
 
-                        listaPagos.Add(p);
+                        };
+                        listaPagos.Add(pago);
                     }
                     conn.Close();
                 }

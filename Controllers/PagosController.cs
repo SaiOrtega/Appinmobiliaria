@@ -20,12 +20,12 @@ namespace AppInmobiliaria.Controllers
             if (id != null)
             {
                 var pagos = repo.ObtenerTodos(id);
-                ViewBag.id = id;
+                ViewBag.md = id;
                 return View(pagos);
             }
             else
             {
-                var pagos = repo.ObtenerTodos(id);
+                var pagos = repo.ObtenerTodos(null);
                 return View(pagos);
             }
         }
@@ -114,7 +114,7 @@ namespace AppInmobiliaria.Controllers
             }
         }
 
-        public ActionResult efectuarPago(int id)
+        public ActionResult moraDePago(int id)
         {
 
             RepoContratos repoContratos = new RepoContratos();
