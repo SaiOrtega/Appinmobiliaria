@@ -22,6 +22,7 @@ namespace AppInmobiliaria.Controllers
             RepoUsos repoUso = new RepoUsos();
             ViewBag.tipo = repoTipo.ObtenerTodos();
             ViewBag.uso = repoUso.ObtenerTodos();
+            ViewBag.inmuebles = inmueble;
             return View(inmueble);
         }
 

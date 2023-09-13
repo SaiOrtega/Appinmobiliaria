@@ -23,11 +23,9 @@ namespace AppInmobiliaria.Controllers
             try
             {
                 contratos = repo.ObtenerTodos();
-
             }
             catch (Exception ex)
             {
-
                 ViewBag.ErrorMessage = "Ocurrio un error al obtener los datos";
             }
             // if (contratos != null || contratos.Count == 0)
@@ -38,7 +36,6 @@ namespace AppInmobiliaria.Controllers
             return View(contratos);
         }
 
-        //deberia separar a los vigentes y los vencidos?
 
         public ActionResult Vigentes()
         {
@@ -246,5 +243,82 @@ namespace AppInmobiliaria.Controllers
                 return View();
             }
         }
+
+        //GET
+        public ActionResult Renovar(int id)
+        {
+
+            RepoInmuebles repoInmu = new RepoInmuebles();
+            RepoInquilinos repoInq = new RepoInquilinos();
+            Contrato contrato = repo.ObtenerUno(id);
+            contrato.FechaInicio = contrato.FechaFinal.HasValue ? contrato.FechaFinal.Value.AddDays(1) :
+            DateTime.Now;
+            contrato.FechaFinal = null;
+            ViewBag.inmuebles = repoInmu.ObtenerTodos();
+            ViewBag.inquilinos = repoInq.ObtenerTodos();
+
+            return View(contrato);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        //POST:
+        public ActionResult Renovar(Contrato contrato)
+        {
+            var contx = new ValidationContext(contrato, serviceProvider: null, items: null);
+            var isValid = Validator.TryValidateObject(contrato, contx, null, true);
+            if (isValid)
+            {
+                int cont = repo.verificarPosibilidad(contrato.FechaInicio, contrato.FechaFinal, contrato.InmuebleId);
+                if (cont == 0)
+                {
+                    try
+                    {
+                        int res = repo.Alta(contrato);
+
+                        return RedirectToAction(nameof(Index));
+
+                    }
+                    catch
+                    {
+                        return View();
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("FechaFinal", "El inmueble no está disponible en ese periodo");
+
+                    RepoInmuebles repoInmu = new RepoInmuebles();
+                    RepoInquilinos repoInq = new RepoInquilinos();
+                    ViewBag.inmuebles = repoInmu.ObtenerTodos();
+                    ViewBag.inquilinos = repoInq.ObtenerTodos();
+
+                    return View();
+
+                }
+
+            }
+            else
+            {
+                RepoInmuebles repoInmu = new RepoInmuebles();
+                RepoInquilinos repoInq = new RepoInquilinos();
+                ViewBag.inmuebles = repoInmu.ObtenerTodos();
+                ViewBag.inquilinos = repoInq.ObtenerTodos();
+
+                return View();
+
+            }
+
+        }
+
+        public ActionResult Vencidos()
+        {
+            var contratos = repo.ObtenerTodosVencidos();
+            return View(contratos);
+
+        }
+
+
     }
 }
