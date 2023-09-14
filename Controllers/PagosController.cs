@@ -47,9 +47,13 @@ namespace AppInmobiliaria.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Pago pago)
         {
+            RepoContratos repoContratos = new RepoContratos();
+            ViewBag.contratos = repoContratos.ObtenerTodos();
+
             int? idContrato = pago.contratoId;
             try
             {
+
                 int res = repo.Alta(pago);
 
                 return RedirectToAction("Index", new { id = idContrato });

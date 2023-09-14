@@ -112,7 +112,7 @@ public class RepoPropietarios
         int res = 0;
         using (MySqlConnection conn = new MySqlConnection(connectionString))
         {
-            var sql = @"UPDATE inquilino SET dni = @dni, nombre = @nombre, apellido = @apellido, direccion = @direccion, telefono = @telefono, email = @email, nacimiento = @nacimiento WHERE id = @id";
+            var sql = @"UPDATE propietario SET dni = @dni, nombre = @nombre, apellido = @apellido, direccion = @direccion, telefono = @telefono, email = @email, nacimiento = @nacimiento WHERE id = @id";
 
             var command = new MySqlCommand(sql, conn);
 

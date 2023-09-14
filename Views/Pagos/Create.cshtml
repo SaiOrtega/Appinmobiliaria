@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Create";
     var cp = (IList<Contrato>)ViewBag.contratos;
+
 }
 
 <h1>Generar Pagos</h1>
@@ -20,7 +21,7 @@
                 <select class="form-control" name="contratoId">
                     @foreach (var item in cp)
                     {
-                        @:<option value="@item.Id">@item.ToString()</option>
+                        @:<option value="@item.Id">Inquilino: @item.inquilino - @item.inmueble</option>
                     }
                 </select>
                 <span asp-validation-for="contratoId" class="text-danger"></span>

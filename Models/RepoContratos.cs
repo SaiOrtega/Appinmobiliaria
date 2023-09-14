@@ -331,20 +331,21 @@ public class RepoContratos
 
 
     }
-    public int TraerContratoEValido(DateTime? inicial, DateTime? final, int? inmId, int? contratoId)
+    public int TraerContratoCrValido(DateTime? inicial, DateTime? final, int? inmId)
     {
         int cont = 0;
         using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var sql = @"SELECT COUNT(*) FROM contrato 
-            WHERE inmueble_id = @inmId  AND(Id != @contratoId)AND ((@FechaInicio BETWEEN contrato.fecha_inicio AND contrato.fecha_fin) OR (@FechaFinal BETWEEN contrato.fecha_inicio AND contrato.fecha_fin))";
+WHERE inmueble_id = @inmId  AND ((@FechaInicio BETWEEN contrato.fecha_inicio AND contrato.fecha_fin) OR (@FechaFinal BETWEEN contrato.fecha_inicio AND contrato.fecha_fin))";
+
+
 
             using (var command = new MySqlCommand(sql, connection))
             {
                 command.Parameters.AddWithValue("@inmId", inmId);
                 command.Parameters.AddWithValue("@FechaInicio", inicial);
                 command.Parameters.AddWithValue("@FechaFinal", final);
-                command.Parameters.AddWithValue("@contratoId", contratoId);
                 connection.Open();
                 cont = Convert.ToInt32(command.ExecuteScalar());
             }
@@ -354,6 +355,27 @@ public class RepoContratos
         return cont;
 
     }
+    public int GetContratoEValidador(DateTime? inicio, DateTime? final, int? inmId, int? contratoId)
+    {
+        int count = 0;
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
+        {
+            var query = @"SELECT COUNT(*) FROM contrato 
+WHERE inmueble_id = @inmId AND (Id != @contratoId) AND ((@FechaInicio BETWEEN contrato.fecha_inicio AND contrato.fecha_fin) OR (@FechaFinal BETWEEN contrato.fecha_inicio AND contrato.fecha_fin))";
+            using (var command = new MySqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@inmId", inmId);
+                command.Parameters.AddWithValue("@FechaInicio", inicio);
+                command.Parameters.AddWithValue("@FechaFinal", final);
+                command.Parameters.AddWithValue("@contratoId", contratoId);
+                connection.Open();
+                count = Convert.ToInt32(command.ExecuteScalar());
+            }
+        }
+        return count;
+    }
+
+
 
 
 

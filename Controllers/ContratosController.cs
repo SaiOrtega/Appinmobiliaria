@@ -109,10 +109,9 @@ namespace AppInmobiliaria.Controllers
             if (isValid)
             {
 
-                int cont = repo.verificarPosibilidad(contrato.FechaInicio, contrato.FechaFinal, contrato.InmuebleId);
+                int cont = repo.TraerContratoCrValido(contrato.FechaInicio, contrato.FechaFinal, contrato.InmuebleId);
                 if (cont == 0)
                 {
-
                     try
                     {
                         int res = repo.Alta(contrato);
@@ -131,7 +130,6 @@ namespace AppInmobiliaria.Controllers
                     ViewBag.inmuebles = repoInmuebles.ObtenerTodos();
                     ViewBag.inquilinos = repoInquilinos.ObtenerTodos();
                     return View();
-
                 }
 
             }
@@ -168,8 +166,20 @@ namespace AppInmobiliaria.Controllers
             var isValid = Validator.TryValidateObject(contrato, contexVal, null, true);
             if (isValid)
             {
-                int cont = repo.TraerContratoEValido(contrato.FechaInicio, contrato.FechaFinal, contrato.InmuebleId, contrato.Id);
+                int cont = repo.GetContratoEValidador(contrato.FechaInicio, contrato.FechaFinal, contrato.InmuebleId, contrato.Id);
                 if (cont == 0)
+                {
+                    ModelState.AddModelError("FechaFinal", "El inmueble no está disponible en ese periodo");
+
+                    RepoInmuebles reInmu = new RepoInmuebles();
+                    RepoInquilinos reInqui = new RepoInquilinos();
+
+                    ViewBag.inmuebles = reInmu.ObtenerTodos();
+                    ViewBag.inquilinos = reInqui.ObtenerTodos();
+
+                    return View(contrato);
+                }
+                else
                 {
 
                     try
@@ -183,18 +193,6 @@ namespace AppInmobiliaria.Controllers
                         return View();
                     }
 
-                }
-                else
-                {
-                    ModelState.AddModelError("FechaFinal", "El inmueble no está disponible en ese periodo");
-
-                    RepoInmuebles reInmu = new RepoInmuebles();
-                    RepoInquilinos reInqui = new RepoInquilinos();
-
-                    ViewBag.inmuebles = reInmu.ObtenerTodos();
-                    ViewBag.inquilinos = reInqui.ObtenerTodos();
-
-                    return View(contrato);
                 }
             }
             else

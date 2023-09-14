@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace AppInmobiliaria.Controllers
 {
-    [Authorize(Policy = "Administrador")]
+    [Authorize]
 
     public class UsuariosController : Controller
     {
@@ -30,10 +30,11 @@ namespace AppInmobiliaria.Controllers
         public readonly RepoUsuarios repoUsuarios = new RepoUsuarios();
 
         // GET: Usuarios
-        [Authorize(Policy = "Administrador")]
+
+
         public ActionResult Index()
         {
-            if (!User.Identity.IsAuthenticated)
+            if (User.IsInRole("Administrador"))
             {
                 var usuarios = repoUsuarios.ObtenerTodos();
                 return View(usuarios);
@@ -259,15 +260,26 @@ namespace AppInmobiliaria.Controllers
         [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
-            return View();
+
+            if (User.IsInRole("Adminstrador"))
+            {
+                var u = repoUsuarios.ObtenerPorId(id);
+                return View(u);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
         }
 
         // POST: Usuarios/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Administrador")]
-        public ActionResult Delete(int id, Usuario usuario)
+        public ActionResult Delete(int id, Usuario us)
         {
+            var usuario = repoUsuarios.ObtenerPorId(id);
             try
             {
                 // TODO: Add delete logic here

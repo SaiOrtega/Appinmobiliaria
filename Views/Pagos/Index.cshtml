@@ -55,7 +55,7 @@
 
                     @if (User.IsInRole("Administrador"))
                     {
-                        @Html.ActionLink("Eliminar", "Delete", new { /* id=item.PrimaryKey */ }, new{@class="btn btn-danger"})
+                        @Html.ActionLink("Eliminar", "Delete", new { id=item.id}, new{@class="btn btn-danger"})
                     }
                 </td>
             </tr>

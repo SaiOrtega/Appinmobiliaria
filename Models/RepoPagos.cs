@@ -136,9 +136,9 @@ public class RepoPagos
                         p.contratoId = reader.GetInt32(4);
                     }
                 }
-                conn.Close();
 
             }
+            conn.Close();
         }
         return p;
 
