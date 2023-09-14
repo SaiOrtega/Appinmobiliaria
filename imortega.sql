@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 08-09-2023 a las 20:24:12
+-- Tiempo de generación: 14-09-2023 a las 02:34:09
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -71,9 +71,10 @@ CREATE TABLE `inmueble` (
 --
 
 INSERT INTO `inmueble` (`id`, `direccion`, `ambientes`, `latitud`, `longitud`, `precio`, `superficie`, `estado`, `propietario_id`, `uso`, `tipo`) VALUES
-(1, 'serranias 5', 4, -63.56, -97.23, 100000.00, 180.00, 1, 10, 1, 2),
-(2, 'serranias 5', 4, -63.56, -97.23, 100000.00, 180.00, 1, 10, 2, 1),
-(11, 'san martin 123', 3, -6456.00, -9723.00, 7690.00, 160.00, 1, 8, 1, 1);
+(1, 'serranias 5', 4, -63.56, -97.23, 100000.00, 180.00, 0, 8, 1, 1),
+(2, 'serranias 6', 4, -63.56, -97.23, 100000.00, 180.00, 1, 8, 1, 1),
+(11, 'san martin 123', 3, -6456.00, -9723.00, 7690.00, 160.00, 1, 8, 1, 1),
+(12, 'santos ortiz 3344', 2, -6356.00, -9823.00, 14000.00, 40.00, 1, 8, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -122,7 +123,8 @@ CREATE TABLE `pago` (
 
 INSERT INTO `pago` (`id`, `contrato_id`, `fecha_pago`, `importe`, `periodo`) VALUES
 (1, 3, '2023-09-07 00:00:00', 2000.00, '2023-09-07 00:00:00'),
-(2, 3, '2023-09-08 00:00:00', 2000.00, '2023-09-01 00:00:00');
+(2, 3, '2023-09-08 00:00:00', 2000.00, '2023-09-01 00:00:00'),
+(3, 3, '2023-09-13 00:00:00', 2000.00, '2023-09-30 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -219,7 +221,7 @@ CREATE TABLE `usuario` (
   `apellido` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
   `avatar` varchar(500) DEFAULT NULL,
-  `clave` varchar(500) NOT NULL,
+  `clave` varchar(800) NOT NULL,
   `rol` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -229,7 +231,8 @@ CREATE TABLE `usuario` (
 
 INSERT INTO `usuario` (`id`, `nombre`, `apellido`, `email`, `avatar`, `clave`, `rol`) VALUES
 (4, 'Basty', 'O', 'basty@mail.com', '/Uploads\\avatar_4.png', 'E3y6jCjTHIy8atfF3e/lKYzJiPWvLe7vNo5qXVtOfFs=', 1),
-(5, 'Charly', 'S', 'char@email.com', '/Uploads\\avatar_5.png', 'RdrsddI0K2bLBRCpN3KnyHy0I6jxNQqaBn+gNEzXyDc=', 2);
+(6, 'Aron', 'Pardo', 'aron@mail.com', '/Uploads\\avatar_6.png', 'dsHvp5KqEr2+N33loBcTvrwQXVZSJJD4dBREO+bIpnk=', 2),
+(16, 'Perla', 'P', 'perla@mail.com', '/Uploads\\avatar_16.jfif', '1xWPXpWVqeUJPsIjtUOLI8ECkOK5Nhcneq7UfRTcO/Y=', 2);
 
 --
 -- Índices para tablas volcadas
@@ -263,7 +266,7 @@ ALTER TABLE `inquilino`
 --
 ALTER TABLE `pago`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `contrato_id` (`contrato_id`);
+  ADD KEY `pago_ibfk_1` (`contrato_id`);
 
 --
 -- Indices de la tabla `propietario`
@@ -309,7 +312,7 @@ ALTER TABLE `contrato`
 -- AUTO_INCREMENT de la tabla `inmueble`
 --
 ALTER TABLE `inmueble`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `inquilino`
@@ -321,7 +324,7 @@ ALTER TABLE `inquilino`
 -- AUTO_INCREMENT de la tabla `pago`
 --
 ALTER TABLE `pago`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `propietario`
@@ -345,7 +348,7 @@ ALTER TABLE `uso`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- Restricciones para tablas volcadas
@@ -355,8 +358,8 @@ ALTER TABLE `usuario`
 -- Filtros para la tabla `contrato`
 --
 ALTER TABLE `contrato`
-  ADD CONSTRAINT `contrato_ibfk_1` FOREIGN KEY (`inmueble_id`) REFERENCES `inmueble` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `contrato_ibfk_2` FOREIGN KEY (`inquilino_id`) REFERENCES `inquilino` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `contrato_ibfk_1` FOREIGN KEY (`inmueble_id`) REFERENCES `inmueble` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `contrato_ibfk_2` FOREIGN KEY (`inquilino_id`) REFERENCES `inquilino` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Filtros para la tabla `inmueble`
@@ -370,13 +373,7 @@ ALTER TABLE `inmueble`
 -- Filtros para la tabla `pago`
 --
 ALTER TABLE `pago`
-  ADD CONSTRAINT `pago_ibfk_1` FOREIGN KEY (`contrato_id`) REFERENCES `contrato` (`id`);
-
---
--- Filtros para la tabla `usuario`
---
-ALTER TABLE `usuario`
-  ADD CONSTRAINT `usuario_ibfk_1` FOREIGN KEY (`rol`) REFERENCES `rol` (`id`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `pago_ibfk_1` FOREIGN KEY (`contrato_id`) REFERENCES `contrato` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
