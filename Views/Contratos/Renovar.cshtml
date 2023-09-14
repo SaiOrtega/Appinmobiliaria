@@ -4,6 +4,7 @@
     ViewData["Title"] = "Edit";
     var Inmu = (IList<Inmueble>)ViewBag.inmuebles;
     var Inqui = (IList<Inquilino>)ViewBag.inquilinos;
+    var deuda = ViewBag.deuda;
 }
 
 <h1>Renovación</h1>
@@ -51,6 +52,10 @@
                 <label asp-for="MontoMensual" class="control-label"></label>
                 <input asp-for="MontoMensual" class="form-control" />
                 <span asp-validation-for="MontoMensual" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="deuda" class="control-label">Monto Adeudado</label>
+                <input id="deuda" class="form-control" value="@ViewBag.deuda" disabled />
             </div>
             <div class="form-group">
                 <input type="submit" value="Guardar" class="btn btn-success" />

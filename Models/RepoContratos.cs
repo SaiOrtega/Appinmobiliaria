@@ -375,6 +375,34 @@ WHERE inmueble_id = @inmId AND (Id != @contratoId) AND ((@FechaInicio BETWEEN co
         return count;
     }
 
+    public decimal SumaPagos(int id)
+    {
+
+        decimal p = 0;
+        using (MySqlConnection conn = new MySqlConnection(connectionString))
+        {
+            var sql = @"SELECT SUM(Importe) AS TotalImporte FROM pago WHERE contrato_id = @id";
+
+
+            using (var command = new MySqlCommand(sql, conn))
+            {
+                command.Parameters.AddWithValue("@id", id);
+                conn.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        p = reader.GetDecimal(0);
+
+                    }
+                }
+            }
+            conn.Close();
+        }
+        return p;
+
+    }
+
 
 
 

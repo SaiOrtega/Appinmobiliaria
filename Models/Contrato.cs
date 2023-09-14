@@ -24,6 +24,7 @@ public class Contrato
 
     [Display(Name = "Monto de Contrato")]
     public decimal? MontoMensual { get; set; }
+    public decimal? MontoAdeudado { get; set; }
 
     public Inmueble inmueble { get; set; }
     public Inquilino inquilino { get; set; }

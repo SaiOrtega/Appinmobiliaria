@@ -249,12 +249,13 @@ namespace AppInmobiliaria.Controllers
             RepoInmuebles repoInmu = new RepoInmuebles();
             RepoInquilinos repoInq = new RepoInquilinos();
             Contrato contrato = repo.ObtenerUno(id);
+            decimal deuda = repo.SumaPagos(id);
             contrato.FechaInicio = contrato.FechaFinal.HasValue ? contrato.FechaFinal.Value.AddDays(1) :
             DateTime.Now;
             contrato.FechaFinal = null;
             ViewBag.inmuebles = repoInmu.ObtenerTodos();
             ViewBag.inquilinos = repoInq.ObtenerTodos();
-
+            ViewBag.deuda = deuda - contrato.MontoMensual;
             return View(contrato);
         }
 
@@ -316,6 +317,8 @@ namespace AppInmobiliaria.Controllers
             return View(contratos);
 
         }
+
+
 
 
     }
