@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 14-09-2023 a las 02:34:09
+-- Tiempo de generación: 14-09-2023 a las 19:02:25
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -44,7 +44,11 @@ INSERT INTO `contrato` (`id`, `inmueble_id`, `inquilino_id`, `fecha_inicio`, `fe
 (3, 1, 1, '2023-08-15 09:01:53', '2023-10-31 09:01:53', 30000.00),
 (4, 1, 1, '2023-09-06 12:20:00', '2023-09-30 14:22:00', 20000.00),
 (5, 1, 1, '2023-09-06 09:22:00', '2023-10-08 09:22:00', 20000.00),
-(6, 11, 1, '2023-10-06 10:49:00', '2023-10-09 10:50:00', 5000.00);
+(6, 11, 1, '2023-10-06 10:49:00', '2023-10-09 10:50:00', 5000.00),
+(7, 11, 1, '2023-08-01 22:21:00', '2023-11-30 22:21:00', 70000.00),
+(8, 12, 3, '2023-09-20 23:39:00', '2023-09-22 23:39:00', 25000.00),
+(9, 13, 8, '2023-09-14 10:07:00', '2023-12-31 10:07:00', 50000.00),
+(10, 14, 8, '2023-09-14 10:18:00', '2024-01-01 10:18:00', 25000.00);
 
 -- --------------------------------------------------------
 
@@ -71,10 +75,12 @@ CREATE TABLE `inmueble` (
 --
 
 INSERT INTO `inmueble` (`id`, `direccion`, `ambientes`, `latitud`, `longitud`, `precio`, `superficie`, `estado`, `propietario_id`, `uso`, `tipo`) VALUES
-(1, 'serranias 5', 4, -63.56, -97.23, 100000.00, 180.00, 0, 8, 1, 1),
+(1, 'serranias 5', 4, -63.56, -97.23, 100000.00, 180.00, 1, 8, 1, 1),
 (2, 'serranias 6', 4, -63.56, -97.23, 100000.00, 180.00, 1, 8, 1, 1),
 (11, 'san martin 123', 3, -6456.00, -9723.00, 7690.00, 160.00, 1, 8, 1, 1),
-(12, 'santos ortiz 3344', 2, -6356.00, -9823.00, 14000.00, 40.00, 1, 8, 1, 1);
+(12, 'santos ortiz 3344', 2, -6356.00, -9823.00, 14000.00, 40.00, 1, 8, 1, 1),
+(13, 'Junín 760', 3, -6456.00, -6687.00, 30000.00, 40.00, 1, 10, 1, 2),
+(14, 'mitre 1340', 2, -6456.00, -9723.00, 40000.00, 40.00, 1, 11, 1, 2);
 
 -- --------------------------------------------------------
 
@@ -101,7 +107,9 @@ INSERT INTO `inquilino` (`id`, `dni`, `nombre`, `apellido`, `direccion`, `telefo
 (1, '1234455', 'adolfo', 'hitler', 'av.muerte 456', '5656565', 'adolf@mail.com', '1957-02-17 00:00:00'),
 (2, '2234455', 'marcos', 'peña', 'av.muerte 456', '5656565', 'ma@mail.com', '1957-02-17 11:23:40'),
 (3, '78634455', 'mono', 'gatica', 'av.master 456', '34566565', 'mono@mail.com', '1980-02-17 11:23:40'),
-(6, '34567899', 'Pablo', 'Perez', 'España 2341', '56779986', 'pablo@mail.com', '2014-01-29 00:00:00');
+(6, '34567899', 'Pablo', 'Perez', 'España 2341', '56779986', 'pablo@mail.com', '2014-01-29 00:00:00'),
+(7, '2222222', 'Pedro', 'Suarez', 'los tamarindos 234', '26655555', 'suarez@mai.com', '2012-02-14 00:00:00'),
+(8, '2576666', 'Mari', 'P', 'Colón 320', '266444444', 'mari@mail.com', '2014-02-05 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -124,7 +132,11 @@ CREATE TABLE `pago` (
 INSERT INTO `pago` (`id`, `contrato_id`, `fecha_pago`, `importe`, `periodo`) VALUES
 (1, 3, '2023-09-07 00:00:00', 2000.00, '2023-09-07 00:00:00'),
 (2, 3, '2023-09-08 00:00:00', 2000.00, '2023-09-01 00:00:00'),
-(3, 3, '2023-09-13 00:00:00', 2000.00, '2023-09-30 00:00:00');
+(3, 3, '2023-09-13 00:00:00', 2000.00, '2023-09-30 00:00:00'),
+(4, 3, '2023-09-13 00:00:00', 3000.00, '2023-09-01 00:00:00'),
+(5, 6, '2023-09-13 00:00:00', 1500.00, '2023-09-01 00:00:00'),
+(6, 8, '2023-09-13 00:00:00', 25000.00, '2023-09-01 00:00:00'),
+(8, 10, '2023-09-14 00:00:00', 5000.00, '2023-09-01 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -149,7 +161,8 @@ CREATE TABLE `propietario` (
 
 INSERT INTO `propietario` (`id`, `dni`, `nombre`, `apellido`, `direccion`, `telefono`, `email`, `nacimiento`) VALUES
 (8, '2098765', 'Edmundo', 'Tremor', 'Junin 2765', '9998777', 'edmund@mail.com', '2015-01-05 00:00:00'),
-(10, '34565657', 'Ariel', 'Mototo', 'Junin 2765', '34455667', 'ariel@mail.com', '2023-03-29 00:00:00');
+(10, '34565657', 'Ariel', 'Mototo', 'Junin 2765', '34455667', 'ariel@mail.com', '2023-03-29 00:00:00'),
+(11, '123456', 'Tomás', 'Perez', 'Mitre 1240', '26655786', 'tomy@mail.com', '1965-07-08 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -231,8 +244,7 @@ CREATE TABLE `usuario` (
 
 INSERT INTO `usuario` (`id`, `nombre`, `apellido`, `email`, `avatar`, `clave`, `rol`) VALUES
 (4, 'Basty', 'O', 'basty@mail.com', '/Uploads\\avatar_4.png', 'E3y6jCjTHIy8atfF3e/lKYzJiPWvLe7vNo5qXVtOfFs=', 1),
-(6, 'Aron', 'Pardo', 'aron@mail.com', '/Uploads\\avatar_6.png', 'dsHvp5KqEr2+N33loBcTvrwQXVZSJJD4dBREO+bIpnk=', 2),
-(16, 'Perla', 'P', 'perla@mail.com', '/Uploads\\avatar_16.jfif', '1xWPXpWVqeUJPsIjtUOLI8ECkOK5Nhcneq7UfRTcO/Y=', 2);
+(17, 'Perla', 'P', 'perla@mail.com', '/Uploads\\avatar_17.jfif', '1xWPXpWVqeUJPsIjtUOLI8ECkOK5Nhcneq7UfRTcO/Y=', 2);
 
 --
 -- Índices para tablas volcadas
@@ -306,31 +318,31 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `contrato`
 --
 ALTER TABLE `contrato`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `inmueble`
 --
 ALTER TABLE `inmueble`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `inquilino`
 --
 ALTER TABLE `inquilino`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `pago`
 --
 ALTER TABLE `pago`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `propietario`
 --
 ALTER TABLE `propietario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo`
@@ -348,7 +360,7 @@ ALTER TABLE `uso`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- Restricciones para tablas volcadas
