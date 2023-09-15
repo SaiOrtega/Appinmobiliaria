@@ -29,6 +29,10 @@ namespace AppInmobiliaria.Controllers
             return View(inquilino);
         }
 
+        [HttpGet]
+
+
+
         // GET: Propietarios/Create
         public ActionResult Create()
         {
@@ -106,7 +110,9 @@ namespace AppInmobiliaria.Controllers
                 return View();
             }
         }
+
     }
+
 }
 
 

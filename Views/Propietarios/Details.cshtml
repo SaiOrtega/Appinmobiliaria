@@ -63,6 +63,8 @@
 <div>
     @Html.ActionLink("Editar", "Edit", new { id = Model.Id},new {@class = "btn btn-primary"})
 
+
+
     @if (User.IsInRole("Administrador"))
     {
 

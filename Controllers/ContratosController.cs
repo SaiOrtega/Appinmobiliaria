@@ -318,8 +318,12 @@ namespace AppInmobiliaria.Controllers
 
         }
 
-
-
+        public ActionResult Listado(int id)
+        {
+            var contratos = repo.ObtenerTodosContratos(id);
+            return View(contratos);
+        }
 
     }
+
 }

@@ -63,6 +63,7 @@
 <div>
     @Html.ActionLink("Editar", "Edit", new { id = Model.Id},new{@class="btn btn-primary"})
 
+
     @if (User.IsInRole("Administrador"))
     {
         @Html.ActionLink("Eliminar", "Delete", new { id = Model.Id }, new { @class = "btn btn-danger delete-link",onclick =

@@ -25,12 +25,23 @@ namespace AppInmobiliaria.Controllers
             ViewBag.inmuebles = inmueble;
             return View(inmueble);
         }
+        public ActionResult IndexProp()
+        {
+            var inmueble = repo.ObtenerTodosDisponibles();
+            RepoTipos repoTipo = new RepoTipos();
+            RepoUsos repoUso = new RepoUsos();
+            ViewBag.tipo = repoTipo.ObtenerTodos();
+            ViewBag.uso = repoUso.ObtenerTodos();
+            ViewBag.inmuebles = inmueble;
+            return View(inmueble);
+        }
+
 
         // GET: Inmuebles/Details/5
         public ActionResult Details(int id)
         {
             var inmueble = repo.ObtenerUno(id);
-
+            var propietario = repo.ObtenerUno(id);
             RepoPropietarios repoProp = new RepoPropietarios();
             RepoUsos repoUso = new RepoUsos();
             RepoTipos repoTipo = new RepoTipos();
@@ -41,6 +52,8 @@ namespace AppInmobiliaria.Controllers
 
             return View(inmueble);
         }
+
+
 
         // GET: Inmuebles/Create
         public ActionResult Create()
@@ -151,5 +164,16 @@ namespace AppInmobiliaria.Controllers
                 return View();
             }
         }
+
+        [HttpGet]
+        public ActionResult Listado(int id)
+        {
+            var inmuebles = repo.ObtenerTodosInmueblesPropietario(id);
+            return View(inmuebles);
+        }
+
+
+
+
     }
 }

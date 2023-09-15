@@ -46,6 +46,7 @@
 </div>
 <div>
     @Html.ActionLink("Editar", "Edit", new { id = Model.Id},new{@class="btn btn-dark"})
+    @Html.ActionLink("Listado", "Listado", new { id=Model.inmueble.Id} ,new{@class ="btn btn-primary"})
     <a asp-action="Index" class="btn btn-secondary">Regresar</a>
     @if (User.IsInRole("Administrador"))
     {

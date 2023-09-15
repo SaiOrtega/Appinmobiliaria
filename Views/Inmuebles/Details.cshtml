@@ -80,5 +80,6 @@
 </div>
 <div>
     @Html.ActionLink("Editar", "Edit", new { id = Model.Id }, new{@class="btn btn-success"})
+    @Html.ActionLink("Listado","Listado", new { id= Model.duenio.Id} ,new{@class ="btn btn-primary"})
     <a asp-action="Index" class="btn btn-secondary">Regresar</a>
 </div>

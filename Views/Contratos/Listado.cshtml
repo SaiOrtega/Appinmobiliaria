@@ -1,14 +1,13 @@
 @model IEnumerable<AppInmobiliaria.Models.Contrato>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Edit";
+
 }
 
-<h1>Listado de Contratos</h1>
+<h1>Listado de Contratos De un Inmueble en Particular</h1>
 
-<p>
-    <a asp-action="Create" class="btn btn-success">Agregar</a>
-</p>
+
 <table class="table">
     <thead>
         <tr>
@@ -68,6 +67,7 @@
                         @Html.ActionLink("Pagos", "Index","Pagos", new { id=item.Id} ,new{@class ="btn btn-primary"})
 
                         @Html.ActionLink("Renovar", "Renovar", new { id=item.Id} ,new{@class ="btn btn-primary"})
+                        @Html.ActionLink("Listado", "Listado", new { id=item.Id} ,new{@class ="btn btn-primary"})
 
 
                         @Html.ActionLink("Editar", "Edit", new { id=item.Id} ,new{@class ="btn btn-warning"})

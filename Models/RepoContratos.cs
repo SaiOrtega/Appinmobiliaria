@@ -400,8 +400,66 @@ WHERE inmueble_id = @inmId AND (Id != @contratoId) AND ((@FechaInicio BETWEEN co
             conn.Close();
         }
         return p;
-
     }
+
+
+    public List<Contrato> ObtenerTodosContratos(int id)
+    {
+        List<Contrato> contratos = new List<Contrato>();
+
+        using (MySqlConnection conn = new MySqlConnection(connectionString))
+        {
+            var sql = @"SELECT c.id, c.inmueble_id, c.inquilino_id, c.fecha_inicio, c.fecha_fin, c.monto_alquiler,inmu.Id,inmu.direccion,inmu.uso,inmu.estado,inqui.Id,inqui.Dni,inqui.Nombre, inqui.Apellido FROM contrato c JOIN inmueble inmu ON c.inmueble_id = inmu.id JOIN inquilino inqui ON inqui.Id = c.inquilino_id WHERE c.inmueble_Id = @id  ORDER BY c.fecha_fin DESC ";
+
+
+
+            using (var command = new MySqlCommand(sql, conn))
+            {
+                command.Parameters.AddWithValue("@id", id);
+                conn.Open();
+                var reader = command.ExecuteReader();
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            Contrato contrato = new Contrato
+                            {
+                                Id = reader.GetInt32(0),
+                                InmuebleId = reader.GetInt32(1),
+                                InquilinoId = reader.GetInt32(2),
+                                FechaInicio = reader.GetDateTime(3),
+                                FechaFinal = reader.GetDateTime(4),
+                                MontoMensual = reader.GetDecimal(5),
+
+                                inmueble = new Inmueble
+                                {
+                                    Id = reader.GetInt32(6),
+                                    direccion = reader.GetString(7),
+                                    uso = reader.GetInt32(8),
+                                    estado = reader.GetBoolean(9)
+                                },
+                                inquilino = new Inquilino
+                                {
+                                    Dni = reader.GetString(10),
+                                    Nombre = reader.GetString(11),
+                                    Apellido = reader.GetString(12)
+                                }
+
+                            };
+                            contratos.Add(contrato);
+                        }
+                    }
+                    conn.Close();
+                }
+            }
+
+        }
+        return contratos;
+    }
+
+
+
 
 
 

@@ -1,7 +1,7 @@
 @model IEnumerable<AppInmobiliaria.Models.Inmueble>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "IndexProp";
 
 }
 <h1>Inmuebles</h1>
@@ -36,29 +36,29 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
+                            <tr>
+                                <td>
                     @Html.DisplayFor(modelItem => item.direccion)
-                </td>
-                <td>
+                                </td>
+                                <td>
                     @Html.DisplayFor(modelItem => item.ambientes)
-                </td>
-                <td>
+                                </td>
+                                <td>
                     @Html.DisplayFor(modelItem => item.precio)
-                </td>
-                <td>
+                                </td>
+                                <td>
                     @Html.DisplayFor(modelItem => item.superficie)
-                </td>
-                <td>
+                                </td>
+                                <td>
                     @(item.estado ? "Disponible" : "No Disponible")
-                </td>
-                <td>
+                                </td>
+                                <td>
                     @{
                         var fullName = (item.duenio.Nombre + " " + item.duenio.Apellido);
                         @Html.DisplayFor(modelItem => fullName)
                     }
-                </td>
-                <td>
+                                </td>
+                                <td>
                     @Html.ActionLink("Editar", "Edit", new { id=item.Id}, new{@class="btn btn-warning"})
 
                     @Html.ActionLink("Detalle", "Details", new { id=item.Id },new{@class="btn btn-dark"})
@@ -67,8 +67,8 @@
                         @Html.ActionLink("Eliminar", "Delete", new { id=item.Id },new{@class="btn btn-danger"})
                     }
 
-                </td>
-            </tr>
+                                </td>
+                            </tr>
 
         }
     </tbody>

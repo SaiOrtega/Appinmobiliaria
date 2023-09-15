@@ -147,4 +147,12 @@ public class RepoPropietarios
         return res;
     }
 
+
+
+
+
 }
+
+
+
+
