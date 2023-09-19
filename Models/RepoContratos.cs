@@ -176,8 +176,8 @@ public class RepoContratos
         return res;
     }
 
-    [Authorize(Policy = "Administrador")]
-    public int EliminarContrato(int id)
+
+    public int Eliminar(int id)
     {
         int res = 0;
 
@@ -377,12 +377,10 @@ WHERE inmueble_id = @inmId AND (Id != @contratoId) AND ((@FechaInicio BETWEEN co
 
     public decimal SumaPagos(int id)
     {
-
         decimal p = 0;
         using (MySqlConnection conn = new MySqlConnection(connectionString))
         {
             var sql = @"SELECT SUM(Importe) AS TotalImporte FROM pago WHERE contrato_id = @id";
-
 
             using (var command = new MySqlCommand(sql, conn))
             {
@@ -390,14 +388,12 @@ WHERE inmueble_id = @inmId AND (Id != @contratoId) AND ((@FechaInicio BETWEEN co
                 conn.Open();
                 using (var reader = command.ExecuteReader())
                 {
-                    if (reader.Read())
+                    if (reader.Read() && !reader.IsDBNull(0))
                     {
                         p = reader.GetDecimal(0);
-
                     }
                 }
             }
-            conn.Close();
         }
         return p;
     }
@@ -457,15 +453,6 @@ WHERE inmueble_id = @inmId AND (Id != @contratoId) AND ((@FechaInicio BETWEEN co
         }
         return contratos;
     }
-
-
-
-
-
-
-
-
-
 
 
 

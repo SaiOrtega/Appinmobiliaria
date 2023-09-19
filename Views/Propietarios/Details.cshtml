@@ -10,10 +10,10 @@
     <h4>Propietario</h4>
     <hr />
     <dl class="row">
-        <dt class="col-sm-2">
+        <dt class="col-sm-2" hidden>
             @Html.DisplayNameFor(model => model.Id)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10" hidden>
             @Html.DisplayFor(model => model.Id)
         </dd>
         <dt class="col-sm-2">
@@ -62,7 +62,7 @@
 </div>
 <div>
     @Html.ActionLink("Editar", "Edit", new { id = Model.Id},new {@class = "btn btn-primary"})
-
+    @Html.ActionLink("Listado","Listado", "Inmuebles", new { id= Model.Id},new{@class ="btn btn-primary"})
 
 
     @if (User.IsInRole("Administrador"))

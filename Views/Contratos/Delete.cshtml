@@ -50,9 +50,20 @@
             @Html.DisplayFor(model => model.MontoMensual)
         </dd>
     </dl>
-
-    <form asp-action="Delete">
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index" class="btn btn-secondary">Regresar</a>
-    </form>
+    @if (User.IsInRole("Administrador"))
+    {
+        <form asp-action="Delete" id="deleteForm">
+            <input type="submit" value="Eliminar" class="btn btn-danger" />
+            <a asp-action="Index" class="btn btn-secondary">Regresar</a>
+        </form>
+    }
 </div>
+<script>
+    document.getElementById('deleteForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        if (confirm('¿Estás seguro de que deseas eliminar este registro? Al elimiarlo perderá toda relación con Contratos,Inmuebles,Inquilinos,Pagos')) {
+            this.submit();
+        }
+    });
+</script>

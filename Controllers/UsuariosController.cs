@@ -200,95 +200,74 @@ namespace AppInmobiliaria.Controllers
         public ActionResult Edit(int id, Usuario u)
         {
             var vista = nameof(Edit);//de que vista provengo
+            var usuarioActual = repoUsuarios.ObtenerPorEmail(User.Identity.Name);
             try
             {
-                var usuarioActual = repoUsuarios.ObtenerPorEmail(User.Identity.Name);
-
-                if (!User.IsInRole("Administrador"))//no soy admin
+                u.Rol = usuarioActual.Rol;
+                if (!User.IsInRole("Administrador") && usuarioActual.Id != id)//no soy admin
                 {
-                    vista = nameof(Perfil);//solo puedo ver mi perfil                   
-                    //u.RolId = usuarioActual.RolId;
-                    if (usuarioActual.Id != id)//si no es admin, solo puede modificarse él mismo
+                    vista = nameof(Perfil);//solo puedo ver mi perfil
+
+                    //si no es admin, solo puede modificarse él mismo
+                    {
                         return RedirectToAction(nameof(Index), "Home");
+                    }
                 }
-                if (ModelState.IsValid)
+                // TODO: Add update logic here
+                if (u.AvatarFile != null)
                 {
-                    // TODO: Add update logic here
-                    if (u.AvatarFile != null)
+                    if (u.Avatar != null)
                     {
-                        if (u.Avatar != null)
+                        string avatarPath = Path.Combine(environment.WebRootPath, u.Avatar.TrimStart('/')); // construir la ruta adecuada agregando wwwRootPath y eliminando el primer slash en u.Avatar
+                        System.IO.File.Delete(avatarPath);
+                        using (FileStream stream = new FileStream(avatarPath, FileMode.Create))
                         {
-                            string avatarPath = Path.Combine(environment.WebRootPath, u.Avatar.TrimStart('/')); // construir la ruta adecuada agregando wwwRootPath y eliminando el primer slash en u.Avatar
-                            System.IO.File.Delete(avatarPath);
-                            using (FileStream stream = new FileStream(avatarPath, FileMode.Create))
-                            {
-                                u.AvatarFile.CopyTo(stream);
-                            }
-
-                        }
-                        else
-                        {
-                            string wwwPath = environment.WebRootPath;
-                            string path = Path.Combine(wwwPath, "Uploads");
-                            if (!Directory.Exists(path))
-                            {
-                                Directory.CreateDirectory(path);
-                            }
-                            //Path.GetFileName(usuario.AvatarFile.FileName);//este nombre se puede repetir
-                            string fileName = "avatar_" + u.Id + Path.GetExtension(u.AvatarFile.FileName);
-                            string pathCompleto = Path.Combine(path, fileName);
-                            u.Avatar = Path.Combine("/Uploads", fileName);
-                            // Esta operación guarda la foto en memoria en la ruta que necesitamos
-                            using (FileStream stream = new FileStream(pathCompleto, FileMode.Create))
-                            {
-                                u.AvatarFile.CopyTo(stream);
-                            }
+                            u.AvatarFile.CopyTo(stream);
                         }
 
-
                     }
-
-                    /*string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                                    password: u.Clave,
-                                    salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
-                                    prf: KeyDerivationPrf.HMACSHA1,
-                                    iterationCount: 1000,
-                                    numBytesRequested: 256 / 8));
-                    u.Clave = hashed;*/
-                    repoUsuarios.Modificacion(u);
-
-                    return RedirectToAction(vista);
-                }
-                else
-                {
-                    foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                    else
                     {
-                        TempData["error"] = error.ErrorMessage;
+                        string wwwPath = environment.WebRootPath;
+                        string path = Path.Combine(wwwPath, "Uploads");
+                        if (!Directory.Exists(path))
+                        {
+                            Directory.CreateDirectory(path);
+                        }
+                        //Path.GetFileName(usuario.AvatarFile.FileName);//este nombre se puede repetir
+                        string fileName = "avatar_" + u.Id + Path.GetExtension(u.AvatarFile.FileName);
+                        string pathCompleto = Path.Combine(path, fileName);
+                        u.Avatar = Path.Combine("/Uploads", fileName);
+                        // Esta operación guarda la foto en memoria en la ruta que necesitamos
+                        using (FileStream stream = new FileStream(pathCompleto, FileMode.Create))
+                        {
+                            u.AvatarFile.CopyTo(stream);
+                        }
                     }
-                    return View(u);
+
 
                 }
+
+                repoUsuarios.Modificacion(u);
+                vista = nameof(Perfil);
+                return RedirectToAction(vista);
             }
             catch (Exception ex)
             {//colocar breakpoints en la siguiente línea por si algo falla
                 throw;
             }
+
         }
 
         // GET: Usuarios/Delete/5
         [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
+            ViewData["Title"] = "Eliminar usuario";
 
-            if (User.IsInRole("Adminstrador"))
-            {
-                var u = repoUsuarios.ObtenerPorId(id);
-                return View(u);
-            }
-            else
-            {
-                return RedirectToAction("Index", "Home");
-            }
+            var u = repoUsuarios.ObtenerPorId(id);
+            return View(u);
+
 
         }
 
@@ -305,6 +284,7 @@ namespace AppInmobiliaria.Controllers
                 var ruta = Path.Combine(environment.WebRootPath, "Uploads", $"avatar_{id}" + Path.GetExtension(usuario.Avatar));
                 if (System.IO.File.Exists(ruta))
                     System.IO.File.Delete(ruta);
+                repoUsuarios.Baja(id);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -417,6 +397,8 @@ namespace AppInmobiliaria.Controllers
                     CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
         }
+
+
     }
 
 

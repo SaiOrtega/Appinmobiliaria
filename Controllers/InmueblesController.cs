@@ -126,10 +126,11 @@ namespace AppInmobiliaria.Controllers
             }
         }
         // GET: Inmuebles/Delete/5
+        [HttpGet]
         [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
-            if (!User.Identity.IsAuthenticated)
+            if (User.Identity.IsAuthenticated)
             {
                 var res = repo.ObtenerUno(id);
                 RepoPropietarios repoProp = new RepoPropietarios();
@@ -171,8 +172,6 @@ namespace AppInmobiliaria.Controllers
             var inmuebles = repo.ObtenerTodosInmueblesPropietario(id);
             return View(inmuebles);
         }
-
-
 
 
     }

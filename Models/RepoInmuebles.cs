@@ -173,13 +173,15 @@ public class RepoInmuebles
         return res;
     }
 
-    [Authorize(Policy = "Administrador")]
+
+
     public int Eliminar(int id)
     {
         int res = 0;
         using (MySqlConnection conn = new MySqlConnection(connectionString))
         {
             var sql = @"DELETE FROM inmueble WHERE id = @id";
+
             var command = new MySqlCommand(sql, conn);
             command.Parameters.AddWithValue("@id", id);
             conn.Open();

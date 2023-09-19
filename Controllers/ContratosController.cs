@@ -5,8 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using AppInmobiliaria.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+
 
 namespace AppInmobiliaria.Controllers
 {
@@ -16,24 +19,23 @@ namespace AppInmobiliaria.Controllers
         public readonly RepoContratos repo = new RepoContratos();
 
         // GET: Contratos
+
         public ActionResult Index()
         {
-            List<Contrato> contratos = null;
+            List<Contrato> contrato = null;
 
             try
             {
-                contratos = repo.ObtenerTodos();
+                // contratos = repo.ObtenerTodos();
+                contrato = repo.ObtenerTodos();
+
             }
             catch (Exception ex)
             {
                 ViewBag.ErrorMessage = "Ocurrio un error al obtener los datos";
             }
-            // if (contratos != null || contratos.Count == 0)
-            // {
-            //     ViewBag.NoDataMessage = "No se encontraron contratos en Base";
-            // }
 
-            return View(contratos);
+            return View(contrato);
         }
 
 
@@ -82,12 +84,22 @@ namespace AppInmobiliaria.Controllers
         // GET: Contratos/Create
         public ActionResult Create()
         {
-            RepoInmuebles repoInmuebles = new RepoInmuebles();
-            RepoInquilinos repoInquilinos = new RepoInquilinos();
+            try
+            {
 
-            ViewBag.inmuebles = repoInmuebles.ObtenerTodos();
-            ViewBag.inquilinos = repoInquilinos.ObtenerTodos();
-            return View();
+                RepoInmuebles repoInmuebles = new RepoInmuebles();
+                RepoInquilinos repoInquilinos = new RepoInquilinos();
+
+                ViewBag.inmuebles = repoInmuebles.ObtenerTodos();
+                ViewBag.inquilinos = repoInquilinos.ObtenerTodos();
+                return View();
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
         }
 
         // POST: Contratos/Create
@@ -148,13 +160,22 @@ namespace AppInmobiliaria.Controllers
         // GET: Contratos/Edit/5
         public ActionResult Edit(int id)
         {
-            var contrato = repo.ObtenerUno(id);
-            RepoInmuebles repoInmuebles = new RepoInmuebles();
-            RepoInquilinos repoInquilinos = new RepoInquilinos();
-            ViewBag.inmuebles = repoInmuebles.ObtenerTodos();
-            ViewBag.inquilinos = repoInquilinos.ObtenerTodos();
+            try
+            {
+                var contrato = repo.ObtenerUno(id);
+                RepoInmuebles repoInmuebles = new RepoInmuebles();
+                RepoInquilinos repoInquilinos = new RepoInquilinos();
+                ViewBag.inmuebles = repoInmuebles.ObtenerTodos();
+                ViewBag.inquilinos = repoInquilinos.ObtenerTodos();
 
-            return View(contrato);
+                return View(contrato);
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
         }
 
         // POST: Contratos/Edit/5
@@ -210,17 +231,24 @@ namespace AppInmobiliaria.Controllers
 
 
         // GET: Contratos/Delete/5
-        [Authorize(Policy = "Administrador")]
+
         public ActionResult Delete(int id)
         {
-            if (User.Identity.IsAuthenticated)
+
+            try
             {
+
+                var res = repo.ObtenerUno(id);
+
                 return View();
+
             }
-            else
+            catch (Exception ex)
             {
-                return RedirectToAction("Index", "Home");
+                throw;
             }
+
+
 
         }
 
@@ -228,12 +256,13 @@ namespace AppInmobiliaria.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Administrador")]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Contrato contrato)
         {
             try
             {
                 // TODO: Add delete logic here
 
+                repo.Eliminar(id);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -253,8 +282,8 @@ namespace AppInmobiliaria.Controllers
             contrato.FechaInicio = contrato.FechaFinal.HasValue ? contrato.FechaFinal.Value.AddDays(1) :
             DateTime.Now;
             contrato.FechaFinal = null;
-            ViewBag.inmuebles = repoInmu.ObtenerTodos();
-            ViewBag.inquilinos = repoInq.ObtenerTodos();
+            ViewBag.inmuebles = repoInmu.ObtenerUno(contrato.InmuebleId.Value);
+            ViewBag.inquilinos = repoInq.ObtenerUno(contrato.InquilinoId.Value);
             ViewBag.deuda = deuda - contrato.MontoMensual;
             return View(contrato);
         }
