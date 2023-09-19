@@ -249,7 +249,6 @@ namespace AppInmobiliaria.Controllers
             }
 
 
-
         }
 
         // POST: Contratos/Delete/5

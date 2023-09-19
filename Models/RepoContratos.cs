@@ -205,7 +205,12 @@ public class RepoContratos
         {
             //var sql = "SELECT * FROM inmueble i JOIN propietario p ON i.propietario_Id = p.id";
             var sql =
-            @"SELECT c.id, c.inmueble_id, c.inquilino_id, c.fecha_inicio, c.fecha_fin, c.monto_alquiler, inmu.Id, inmu.direccion,inmu.uso,inmu.estado,inqui.Dni,inqui.Nombre, inqui.Apellido FROM contrato c JOIN inmueble inmu ON c.inmueble_id = inmu.id JOIN inquilino inqui ON inqui.Id = c.inquilino_id WHERE YEAR(c.fecha_fin) >= YEAR(NOW()) AND  MONTH(c.fecha_fin) >= MONTH(NOW()) AND DAY(c.fecha_fin) >= DAY(NOW()) ORDER BY fecha_fin ASC";
+            @"SELECT c.id, c.inmueble_id, c.inquilino_id, c.fecha_inicio, c.fecha_fin, c.monto_alquiler, inmu.Id, inmu.direccion, inmu.uso, inmu.estado, inqui.Dni, inqui.Nombre, inqui.Apellido
+            FROM contrato c
+            JOIN inmueble inmu ON c.inmueble_id = inmu.id
+            JOIN inquilino inqui ON inqui.Id = c.inquilino_id
+            WHERE c.fecha_fin >= CURRENT_DATE
+            ORDER BY c.fecha_fin ASC";
 
             using (var command = new MySqlCommand(sql, conn))
             {
